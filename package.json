@@ -2,6 +2,28 @@
   "name": "root",
   "private": true,
   "devDependencies": {
+    "@commitlint/cli": "^8.3.4",
+    "@commitlint/config-lerna-scopes": "^8.3.4",
+    "commitizen": "^4.0.3",
+    "commitlint-config-gitmoji": "^1.0.1",
+    "cz-emoji": "^1.1.2",
+    "husky": "^4.0.4",
     "lerna": "^3.20.2"
+  },
+  "husky": {
+    "hooks": {
+      "prepare-commit-msg": "exec < /dev/tty && git-cz --hook || true",
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "./node_modules/cz-emoji"
+    },
+    "cz-emoji": {
+      "scopes": [
+        "static-site-scaffold"
+      ]
+    }
   }
 }
