@@ -8,7 +8,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "https://github.com/chromeos/static-site-scaffold.git"
+    "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
   },
   "files": [
     "lib/**/*",
