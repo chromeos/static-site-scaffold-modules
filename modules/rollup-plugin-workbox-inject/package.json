@@ -17,10 +17,6 @@
   },
   "author": "Sam Richard <samrichard@google.com>",
   "license": "Apache-2.0",
-  "devDependencies": {
-    "ava": "^2.4.0",
-    "nyc": "^15.0.0"
-  },
   "dependencies": {
     "chalk": "^3.0.0",
     "fast-json-stable-stringify": "^2.1.0",
