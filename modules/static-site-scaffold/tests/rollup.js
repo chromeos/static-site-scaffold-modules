@@ -22,18 +22,14 @@ import clone from 'lodash.clonedeep';
 test('ESM exported correctly', t => {
   // ESMs
   t.deepEqual(Object.keys(rollup.esm.input), Object.keys(config.javascript.esm), 'Exported ESM inputs are the same as config');
-  t.deepEqual(
-    Object.values(rollup.esm.input),
-    Object.values(config.javascript.esm).map(i => path.join(config.folders.input, i)),
-    'Exported ESM outputs are the same as config, plus input directory',
-  );
+  t.deepEqual(Object.values(rollup.esm.input), Object.values(config.javascript.esm).map(i => path.join(config.folders.source, i)), 'Exported ESM outputs are the same as config, plus input directory');
   t.is(rollup.esm.output.format, 'esm');
 });
 
 test('IIFE exported correctly', t => {
   // IIFEs
   rollup.iifes.forEach((iife, i) => {
-    const input = path.join(config.folders.input, Object.values(config.javascript.iife)[i]);
+    const input = path.join(config.folders.source, Object.values(config.javascript.iife)[i]);
     const output = Object.keys(config.javascript.iife)[i];
     t.is(iife.output.name, output);
     t.is(iife.input, input);

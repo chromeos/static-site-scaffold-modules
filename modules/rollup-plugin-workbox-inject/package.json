@@ -1,0 +1,30 @@
+{
+  "name": "rollup-plugin-workbox-inject",
+  "version": "1.0.0",
+  "description": "Inject workbox precaching into a Rollup compiled service worker",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "nyc ava"
+  },
+  "keywords": [
+    "rollup-plugin"
+  ],
+  "ava": {
+    "files": [
+      "tests/**/*"
+    ]
+  },
+  "author": "Sam Richard <samrichard@google.com>",
+  "license": "Apache-2.0",
+  "devDependencies": {
+    "ava": "^2.4.0",
+    "eslint": "^6.8.0",
+    "nyc": "^15.0.0"
+  },
+  "dependencies": {
+    "chalk": "^3.0.0",
+    "fast-json-stable-stringify": "^2.1.0",
+    "workbox-build": "^5.0.0-rc.1"
+  }
+}

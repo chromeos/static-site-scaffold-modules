@@ -14,9 +14,9 @@
  * limitations under the License.
  */
 const { folders, serviceWorker } = require('config');
+const workboxInject = require('rollup-plugin-workbox-inject');
 const path = require('path');
 const config = require('./rollup.config');
-const workboxInject = require('./rollup/workbox-inject.js');
 
 const output = {
   name: serviceWorker.dest,
@@ -26,7 +26,7 @@ const output = {
 };
 
 const workboxConfig = {
-  swSrc: path.join(folders.input, serviceWorker.src),
+  swSrc: path.join(folders.source, serviceWorker.src),
   swDest: path.join(folders.output, serviceWorker.dest),
   globDirectory: folders.output,
   globPatterns: serviceWorker.precache,
@@ -36,7 +36,7 @@ const plugins = config.plugins;
 plugins.push(workboxInject(workboxConfig));
 
 module.exports = {
-  input: path.join(folders.input, serviceWorker.src),
+  input: path.join(folders.source, serviceWorker.src),
   output,
   plugins,
 };

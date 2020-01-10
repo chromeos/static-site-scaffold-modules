@@ -36,7 +36,7 @@ const production = process.env.NODE_ENV === 'production';
  */
 function buildSrcDest(asset) {
   return {
-    src: Array.isArray(asset.src) ? asset.src.map(w => path.join(folders.input, w)) : path.join(folders.input, asset.src),
+    src: Array.isArray(asset.src) ? asset.src.map(w => path.join(folders.source, w)) : path.join(folders.source, asset.src),
     dest: path.join(folders.output, asset.dest),
   };
 }

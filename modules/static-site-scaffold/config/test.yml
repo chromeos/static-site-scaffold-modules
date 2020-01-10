@@ -15,6 +15,7 @@ javascript:
   esm:
     js/main: js/main.js
   iife:
+    js/baseline: js/baseline.js
 
 # Service Worker Config
 serviceWorker:
@@ -35,9 +36,6 @@ sass:
 
 # Static Asset Folders
 assets:
-  images:
-    src: images/**/*
-    dest: images
   videos:
     src: videos/**/*
     dest: videos
@@ -46,10 +44,24 @@ assets:
     dest: fonts
   manifest:
     src: manifest.json
-    dest: manifest.json
+    dest: ''
+
+# Image optimization
+images:
+  sizes: 100vw
+  lazy: true
+  additional:
+    - images/icons/**/*
+  watch:
+    src: images/**/*
+    dest: images/**/*
 
 # HTML Optimization
+#   src is relative to the _output_ folder, not the pages or source folder.
 optimize:
+  src:
+    - '**/*.html'
+    - '**/*.txt'
   critical:
     inline: true
     minify: true

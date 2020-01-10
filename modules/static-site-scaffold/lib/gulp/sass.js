@@ -41,7 +41,7 @@ const lintSass = lazypipe()
  * @return {function} Gulp task to lint and compile Sass
  */
 function sassTask(gulp) {
-  const src = path.join(folders.input, sassConfig.src);
+  const src = path.join(folders.source, sassConfig.src);
   const dest = path.join(folders.output, sassConfig.dest);
   return function compileSass() {
     return gulp

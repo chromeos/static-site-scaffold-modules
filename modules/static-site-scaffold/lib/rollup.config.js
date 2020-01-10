@@ -35,7 +35,7 @@ const output = {
 const esm = { input, output };
 if (javascript.esm) {
   for (const [key, value] of Object.entries(javascript.esm)) {
-    input[key] = path.join(folders.input, value);
+    input[key] = path.join(folders.source, value);
   }
 }
 
@@ -48,7 +48,7 @@ if (javascript.iife) {
     iifeOutput.format = 'iife';
 
     iifes.push({
-      input: path.join(folders.input, value),
+      input: path.join(folders.source, value),
       output: iifeOutput,
     });
   }
