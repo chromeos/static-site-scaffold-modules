@@ -7,7 +7,7 @@ A [Workbox](https://developers.google.com/web/tools/workbox) plugin for [Rollup]
 ### `rollup.config.js`
 
 ```js
-const workbox = require('rollup-plugin-workbox-inject);
+const workbox = require('rollup-plugin-workbox-inject');
 
 module.exports = {
   input: /*...*/,
