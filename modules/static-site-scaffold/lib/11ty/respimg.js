@@ -68,7 +68,10 @@ async function resizeAndOptimize(sizes, type, src, buff) {
         const outputDest = outputURL(src, size, type.ext);
         const webpDest = outputURL(src, size, 'webp');
 
-        return [{ dest: outputDest, buff: output }, { dest: webpDest, buff: webp }];
+        return [
+          { dest: outputDest, buff: output },
+          { dest: webpDest, buff: webp },
+        ];
       });
     }
     case 'image/jpeg':
@@ -85,7 +88,10 @@ async function resizeAndOptimize(sizes, type, src, buff) {
         const outputDest = outputURL(src, size, type.ext);
         const webpDest = outputURL(src, size, 'webp');
 
-        return [{ dest: outputDest, buff: output }, { dest: webpDest, buff: webp }];
+        return [
+          { dest: outputDest, buff: output },
+          { dest: webpDest, buff: webp },
+        ];
       });
     }
     case 'image/svg': {

@@ -22,7 +22,11 @@ import clone from 'lodash.clonedeep';
 test('ESM exported correctly', t => {
   // ESMs
   t.deepEqual(Object.keys(rollup.esm.input), Object.keys(config.javascript.esm), 'Exported ESM inputs are the same as config');
-  t.deepEqual(Object.values(rollup.esm.input), Object.values(config.javascript.esm).map(i => path.join(config.folders.source, i)), 'Exported ESM outputs are the same as config, plus input directory');
+  t.deepEqual(
+    Object.values(rollup.esm.input),
+    Object.values(config.javascript.esm).map(i => path.join(config.folders.source, i)),
+    'Exported ESM outputs are the same as config, plus input directory',
+  );
   t.is(rollup.esm.output.format, 'esm');
 });
 
