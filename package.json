@@ -4,7 +4,8 @@
   "scripts": {
     "lerna": "lerna",
     "test": "lerna exec -- npm t",
-    "commitlint": "commitlint"
+    "commitlint": "commitlint",
+    "husky": "husky"
   },
   "devDependencies": {
     "@commitlint/cli": "^8.3.4",
@@ -14,6 +15,7 @@
     "eslint": "^6.8.0",
     "eslint-config-google": "^0.14.0",
     "eslint-config-prettier": "^6.9.0",
+    "eslint-plugin-ava": "^9.0.0",
     "eslint-plugin-import": "^2.19.1",
     "eslint-plugin-prettier": "^3.1.2",
     "husky": "^4.0.6",
