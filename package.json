@@ -3,6 +3,9 @@
   "private": true,
   "scripts": {
     "lerna": "lerna",
+    "link": "lerna link",
+    "bootstrap": "lerna bootstrap",
+    "add": "lerna add",
     "test": "lerna exec -- npm t",
     "commitlint": "commitlint",
     "husky": "husky"
