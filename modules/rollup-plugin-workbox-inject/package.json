@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-workbox-inject",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Inject workbox precaching into a Rollup compiled service worker",
   "main": "index.js",
   "scripts": {
@@ -15,7 +15,13 @@
       "tests/**/*"
     ]
   },
-  "author": "Sam Richard <samrichard@google.com>",
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
+  },
   "license": "Apache-2.0",
   "peerDependencies": {
     "workbox-build": "^5.0.0-rc.1"
