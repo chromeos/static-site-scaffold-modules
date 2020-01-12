@@ -1,0 +1,6 @@
+env:
+  browser: true
+  node: false
+  es6: true
+  es2017: true
+  serviceworker: true

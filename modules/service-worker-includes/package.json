@@ -1,0 +1,34 @@
+{
+  "name": "service-worker-includes",
+  "version": "1.0.0",
+  "description": "Service Worker Includes using Workbox",
+  "browser": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/chromeos/static-site-scaffold-modules.git"
+  },
+  "keywords": [
+    "workbox",
+    "service",
+    "worker",
+    "performance",
+    "pwa"
+  ],
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "license": "Apache-2.0",
+  "bugs": {
+    "url": "https://github.com/chromeos/static-site-scaffold-modules/issues"
+  },
+  "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
+  "dependencies": {
+    "workbox-cacheable-response": "^5.0.0-rc.1",
+    "workbox-precaching": "^5.0.0-rc.1",
+    "workbox-strategies": "^5.0.0-rc.1"
+  }
+}
