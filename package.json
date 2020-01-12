@@ -42,7 +42,9 @@
       "scopes": [
         "root",
         "static-site-scaffold",
-        "rollup-plugin-workbox-inject"
+        "rollup-plugin-workbox-inject",
+        "service-worker-includes",
+        "service-worker-i18n-redirect"
       ]
     }
   }
