@@ -24,6 +24,7 @@ Service Worker Includes is designed to work with service workers built with [Wor
 
 ```js
 import { StaleWhileRevalidate } from 'workbox-strategies';
+import { CacheableResponsePlugin } from 'workbox-cacheable-response';
 import { serviceWorkerIncludePlugin } from 'service-worker-includes';
 import { registerRoute } from 'workbox-routing';
 
