@@ -21,6 +21,7 @@ function getEmojiChoices() {
  */
 async function createQuestions() {
   const choices = getEmojiChoices();
+  const scopeChoices = (await scopes()).map(s => ({ name: s, value: s }));
 
   const fuzzy = new fuse(choices, {
     shouldSort: true,
@@ -30,6 +31,16 @@ async function createQuestions() {
     maxPatternLength: 32,
     minMatchCharLength: 1,
     keys: ['name', 'code'],
+  });
+
+  const fuzzyScope = new fuse(scopeChoices, {
+    shouldSort: true,
+    threshold: 0.4,
+    location: 0,
+    distance: 100,
+    maxPatternLength: 32,
+    minMatchCharLength: 1,
+    keys: ['name'],
   });
 
   const questions = [
@@ -42,10 +53,12 @@ async function createQuestions() {
       },
     },
     {
-      type: 'list',
+      type: 'autocomplete',
       name: 'scope',
       message: 'Specify a scope:',
-      choices: scopes,
+      source(answersSoFar, query) {
+        return Promise.resolve(query ? fuzzyScope.search(query) : scopeChoices);
+      },
     },
     {
       type: 'input',
