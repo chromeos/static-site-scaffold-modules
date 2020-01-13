@@ -114,7 +114,7 @@ async function swiCleanup({ response }) {
   return new Response(rebuild, { headers: response.headers });
 }
 
-export const navigationNormalizationPlugin = {
+export const serviceWorkerIncludePlugin = {
   cacheKeyWillBeUsed: normalizeIfNeeded,
   requestWillFetch: normalizeIfNeeded,
   cachedResponseWillBeUsed: serviceWorkerInclude,
