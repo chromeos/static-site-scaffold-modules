@@ -1,0 +1,30 @@
+{
+  "name": "lerna-emoji",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "nyc ava"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*"
+    ]
+  },
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "emoji-regex": "^8.0.0",
+    "fuse.js": "^3.4.6",
+    "import-cwd": "^3.0.0",
+    "inquirer-autocomplete-prompt": "^1.0.1",
+    "wrap-ansi": "^6.2.0"
+  }
+}
