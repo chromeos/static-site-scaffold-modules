@@ -17,13 +17,14 @@
 /**
  *
  * @param {Array} languages - Array of langcodes to include
- * @param {Class} preferences - A class for
- * @param {Object} htmlCachingStrategy - A Workbox caching strategy
+ * @param {Object} preferences - An object that contains a 'get' method
+ * @param {String<Promise>} preferences.get - The preferred language to use
+ * @param {Object} cachingStrategy - A Workbox caching strategy
  *
  * @return {Function} A function to handle the incoming request, which will either redirect a user based on chosen language or will use the htmlCachingStrategy to resolve the request
  */
-export function htmlHandlerSetup(languages, preferences, htmlCachingStrategy) {
-  return async function htmlHandler({ event }) {
+export function i18nHandler(languages, preferences, cachingStrategy) {
+  return async function i18nRouteHandler({ event }) {
     const lang = await preferences.get('lang');
     const { request } = event;
 
@@ -31,15 +32,14 @@ export function htmlHandlerSetup(languages, preferences, htmlCachingStrategy) {
     const currentLang = urlLang[1];
     const isALanguage = languages.includes(currentLang);
     const isRightLanguage = currentLang !== lang;
-    const shouldRefresh = new URL(request.url).searchParams.get('locale_fallback') !== 'true';
+    const shouldRefresh = new URL(request.url).searchParams.get('locale_redirect') !== 'false';
 
     if (isALanguage && isRightLanguage && shouldRefresh) {
-      console.log('⇒ Redirecting');
       urlLang[1] = lang;
       const redirectURL = `${self.location.origin}${urlLang.join('/')}`;
       return Response.redirect(redirectURL, 302);
     }
 
-    return htmlCachingStrategy.handle({ event, request });
+    return cachingStrategy.handle({ event, request });
   };
 }
