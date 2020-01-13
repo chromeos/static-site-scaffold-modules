@@ -36,16 +36,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./node_modules/cz-emoji"
-    },
-    "cz-emoji": {
-      "scopes": [
-        "root",
-        "static-site-scaffold",
-        "rollup-plugin-workbox-inject",
-        "service-worker-includes",
-        "service-worker-i18n-redirect"
-      ]
+      "path": "./modules/lerna-emoji/commitizen.js"
     }
   }
 }
