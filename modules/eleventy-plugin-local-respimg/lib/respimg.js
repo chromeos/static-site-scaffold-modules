@@ -22,8 +22,8 @@ const { readFileSync, ensureDirSync } = require('fs-extra');
 const { writeFile } = require('fs').promises;
 const path = require('path');
 
-const { guessLength, generateSrcset, determineImagePath } = require('./lib/helpers');
-const { resizeAndOptimize, optimizeAdditional } = require('./lib/resize');
+const { guessLength, generateSrcset, determineImagePath } = require('./helpers');
+const { resizeAndOptimize, optimizeAdditional } = require('./resize');
 
 const imagemap = {};
 
