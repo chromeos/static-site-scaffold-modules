@@ -1,6 +1,6 @@
 {
   "name": "eleventy-plugin-local-respimg",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "Eleventy plugin for optimizing and making responsive local images",
   "keywords": [
     "eleventy",
@@ -28,5 +28,21 @@
     "url": "https://github.com/chromeos/static-site-scaffold-modules/issues"
   },
   "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
-  "license": "Apache-2.0"
+  "license": "Apache-2.0",
+  "dependencies": {
+    "@gumlet/gif-resize": "^1.0.4",
+    "cheerio": "^1.0.0-rc.3",
+    "fast-glob": "^3.1.1",
+    "file-type": "^13.0.3",
+    "fs-extra": "^8.1.0",
+    "image-size": "^0.8.3",
+    "imagemin": "^7.0.1",
+    "imagemin-gif2webp": "^2.0.0",
+    "imagemin-mozjpeg": "^8.0.0",
+    "imagemin-pngquant": "^8.0.0",
+    "imagemin-svgo": "^7.0.0",
+    "imagemin-webp": "^5.1.0",
+    "replace-ext": "^1.0.0",
+    "sharp": "^0.23.4"
+  }
 }
