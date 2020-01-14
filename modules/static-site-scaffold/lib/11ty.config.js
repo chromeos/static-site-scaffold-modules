@@ -36,11 +36,15 @@ function configEleventy(eleventy) {
 
   eleventy.addPlugin(pluginLocalRespimg, config);
 
+  const inputAbsolute = path.join(process.cwd(), config.folders.pages);
+  const includesAbsolute = path.join(process.cwd(), config.folders.templates, config.folders.includes);
+  const layoutsAbsolute = path.join(process.cwd(), config.folders.templates, config.folders.layouts);
+
   const dir = {
     input: config.folders.pages,
     output: config.folders.output,
-    includes: path.join(process.cwd(), config.folders.templates, config.folders.includes),
-    layouts: path.join(process.cwd(), config.folders.templates, config.folders.layouts),
+    includes: path.relative(inputAbsolute, includesAbsolute),
+    layouts: path.relative(inputAbsolute, layoutsAbsolute),
   };
 
   return {
