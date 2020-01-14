@@ -1,0 +1,32 @@
+{
+  "name": "eleventy-plugin-local-respimg",
+  "version": "0.1.0",
+  "description": "Eleventy plugin for optimizing and making responsive local images",
+  "keywords": [
+    "eleventy",
+    "respimg",
+    "responsive"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "nyc ava"
+  },
+  "ava": {
+    "files": [
+      "tests/**/*"
+    ]
+  },
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chromeos/static-site-scaffold-modules/issues"
+  },
+  "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
+  "license": "Apache-2.0"
+}
