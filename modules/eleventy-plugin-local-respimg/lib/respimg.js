@@ -29,8 +29,9 @@ const imagemap = {};
 
 /**
  * @param {object} config
+ * @return {function}
  */
-async function respimgSetup(config) {
+function respimgSetup(config) {
   /**
    * @param {string} content
    * @param {string} outputPath
