@@ -48,6 +48,10 @@ assets:
 
 # Image optimization
 images:
+  resize:
+    min: 250
+    max: 1500
+    step: 150
   sizes: 100vw
   lazy: true
   additional:

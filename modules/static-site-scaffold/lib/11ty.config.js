@@ -13,10 +13,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const markdown = require('./11ty/markdown');
-const respimg = require('./11ty/respimg');
-const l10n = require('./11ty/l10n');
 const config = require('config');
+
+const pluginLocalRespimg = require('eleventy-plugin-local-respimg');
+
+const markdown = require('./11ty/markdown');
+const l10n = require('./11ty/l10n');
+
 const path = require('path');
 
 /**
@@ -31,7 +34,7 @@ function configEleventy(eleventy) {
 
   eleventy.setLibrary('md', markdown);
 
-  respimg.setup(eleventy, config);
+  eleventy.addPlugin(pluginLocalRespimg, config);
 
   const dir = {
     input: config.folders.pages,
