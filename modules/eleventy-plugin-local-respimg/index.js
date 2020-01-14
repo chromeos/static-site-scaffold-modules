@@ -19,7 +19,7 @@ const path = require('path');
 
 module.exports = {
   configFunction(eleventy, config = {}) {
-    eleventy.addTransform('respimg', respimg, config);
+    eleventy.addTransform('respimg', respimg(config));
     if (eleventy.addWatchTarget && config.images.watch) {
       if (Array.isArray(config.images.watch.src)) {
         config.images.watch.src.map(p => eleventy.addWatchTarget(path.join(config.folders.source, p)));
