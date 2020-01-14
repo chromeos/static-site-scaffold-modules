@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 const cheerio = require('cheerio');
-const fileType = require('file-type');
+const FileType = require('file-type');
 const imageSize = require('image-size');
 const glob = require('fast-glob');
 
@@ -85,7 +85,7 @@ function respimgSetup(config) {
             const file = readFileSync(path.join(config.folders.source, src));
             ensureDirSync(path.join(config.folders.output, path.dirname(src)));
 
-            const type = fileType(file);
+            const type = await FileType.fromBuffer(file);
             const size = imageSize(file);
 
             if (path.extname(src) === '.svg') {
