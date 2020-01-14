@@ -19,6 +19,10 @@
     "type": "git",
     "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
   },
+  "bugs": {
+    "url": "https://github.com/chromeos/static-site-scaffold-modules/issues"
+  },
+  "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
   "license": "Apache-2.0",
   "dependencies": {
     "emoji-regex": "^8.0.0",
