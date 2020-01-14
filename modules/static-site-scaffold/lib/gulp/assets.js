@@ -143,4 +143,5 @@ module.exports = {
   fontsTask,
   htmlTask,
   manifestTask,
+  buildSrcDest,
 };
