@@ -221,12 +221,12 @@ module.exports = [
   //   "description": "Updating compiled files or packages.",
   //   "name": "dep-up"
   // },
-  // {
-  //   "emoji": "👽",
-  //   "code": ":alien:",
-  //   "description": "Updating code due to external API changes.",
-  //   "name": "compat"
-  // },
+  {
+    emoji: '👽',
+    code: ':alien:',
+    description: 'Updating code due to external API changes.',
+    name: 'compat',
+  },
   // {
   //   "emoji": "🚚",
   //   "code": ":truck:",
