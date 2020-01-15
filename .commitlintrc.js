@@ -14,6 +14,6 @@
  * limitations under the License.
  */
 
-const config = require('./modules/lerna-emoji/commitlint');
+const config = require('./modules/emoji-commit-helpers/commitlint');
 
 module.exports = config;

@@ -36,7 +36,7 @@
   },
   "config": {
     "commitizen": {
-      "path": "./modules/lerna-emoji/commitizen.js"
+      "path": "./modules/emoji-commit-helpers/commitizen.js"
     }
   }
 }
