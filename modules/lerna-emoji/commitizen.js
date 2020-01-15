@@ -1,27 +1,50 @@
-const scopes = require('./lib/scopes');
-const emoji = require('./lib/emoji');
+/**
+ * Copyright 2019 Google LLC
+ *
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ *
+ *   https://www.apache.org/licenses/LICENSE-2.0
+ *
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ */
+const config = require('./lib/config');
 const fuse = require('fuse.js');
 const wrap = require('wrap-ansi');
 
 /**
+ * @param {Object[]} options - Array of objects
  * @return {Object[]} Array of objects
  */
-function getEmojiChoices() {
-  const maxNameLength = emoji.reduce((maxLength, type) => (type.name.length > maxLength ? type.name.length : maxLength), 0);
+function generateAutocomplete(options) {
+  const maxNameLength = options.reduce((maxLength, option) => (option.name.length > maxLength ? option.name.length : maxLength), 0);
 
-  return emoji.map(choice => ({
-    name: `${choice.name.padEnd(maxNameLength)}  ${choice.emoji}  ${choice.description}`,
-    value: choice.emoji,
-    code: choice.code,
-  }));
+  return options.map(choice => {
+    let name = `${choice.name.padEnd(maxNameLength)}  ${choice.emoji || '|'}  ${choice.description}`;
+    if (name.length > 80) {
+      name = name.substring(0, 79) + '…';
+    }
+
+    return {
+      name,
+      value: choice.emoji || choice.name,
+      description: choice.description,
+      code: choice.code || '',
+    };
+  });
 }
 
 /**
  *
  */
 async function createQuestions() {
-  const choices = getEmojiChoices();
-  const scopeChoices = (await scopes()).map(s => ({ name: s, value: s }));
+  const choices = generateAutocomplete(config.emoji);
+  const scopeChoices = generateAutocomplete(await config.scopes());
 
   const fuzzy = new fuse(choices, {
     shouldSort: true,
@@ -40,7 +63,7 @@ async function createQuestions() {
     distance: 100,
     maxPatternLength: 32,
     minMatchCharLength: 1,
-    keys: ['name'],
+    keys: ['name', 'description'],
   });
 
   const questions = [
