@@ -227,12 +227,12 @@ module.exports = [
     description: 'Updating code due to external API changes.',
     name: 'compat',
   },
-  // {
-  //   "emoji": "🚚",
-  //   "code": ":truck:",
-  //   "description": "Moving or renaming files.",
-  //   "name": "mv"
-  // },
+  {
+    emoji: '🚚',
+    code: ':truck:',
+    description: 'Moving or renaming files.',
+    name: 'mv',
+  },
   // {
   //   "emoji": "📄",
   //   "code": ":page_facing_up:",

@@ -1,5 +1,5 @@
 {
-  "name": "lerna-emoji",
+  "name": "emoji-commit-helpers",
   "version": "0.1.0",
   "description": "Commitlint and Commitizen helpers for working with Gitmoji",
   "main": "index.js",
