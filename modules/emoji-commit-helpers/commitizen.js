@@ -88,7 +88,9 @@ async function createQuestions() {
       name: 'subject',
       message: 'Write a short description:',
       validate(input) {
-        return input.length > 3 && input.length <= 50;
+        if (input.length < 3) return 'Subject must be at least 3 characters long';
+        if (input.length > 50) return 'Subject must not exceed 50 characters';
+        return true;
       },
     },
     {
