@@ -1,5 +1,4 @@
 const { cosmiconfigSync } = require('cosmiconfig');
-const isPromise = require('is-promise');
 const emoji = require('./emoji');
 
 const path = require('path');
@@ -12,20 +11,29 @@ let scopes = [];
 
 if (existsSync(path.join(process.cwd(), 'lerna.json'))) {
   scopes = require('./scopes');
+} else {
+  scopes = userConfig.scopes;
 }
 
 const config = {
   emoji,
-  scopes: userConfig.scopes || scopes,
 };
 
-if (typeof config.scopes === 'function' && config.scopes.constructor.name !== 'AsyncFunction') {
-  config.scopes = Promise.resolve(config.scopes());
-} else if (typeof config.scopes !== 'function' && !isPromise(config.scopes)) {
-  if (config.scopes.length === 0) {
+if (typeof scopes === 'function') {
+  if (scopes.constructor.name !== 'AsyncFunction') {
+    config.scopes = async function getScopes() {
+      return scopes();
+    };
+  } else {
+    config.scopes = scopes;
+  }
+} else {
+  if (scopes.length === 0) {
     throw new Error("Scopes can't be empty!");
   }
-  config.scopes = Promise.resolve(config.scopes);
+  config.scopes = async function getScopes() {
+    return scopes;
+  };
 }
 
 if (userConfig.emoji) {
