@@ -1,7 +1,7 @@
 {
   "name": "lerna-emoji",
   "version": "0.1.0",
-  "description": "",
+  "description": "Commitlint and Commitizen helpers for working with Gitmoji",
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
@@ -25,10 +25,12 @@
   "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
   "license": "Apache-2.0",
   "dependencies": {
+    "cosmiconfig": "^6.0.0",
     "emoji-regex": "^8.0.0",
     "fuse.js": "^3.4.6",
     "import-cwd": "^3.0.0",
     "inquirer-autocomplete-prompt": "^1.0.1",
+    "is-promise": "^2.1.0",
     "wrap-ansi": "^6.2.0"
   }
 }
