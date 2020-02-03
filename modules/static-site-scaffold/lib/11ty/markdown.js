@@ -13,8 +13,9 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const md = require('markdown-it');
+const markdown = require('markdown-it');
 const { expand } = require('@emmetio/expand-abbreviation');
+const uslug = require('uslug');
 
 const Prism = require('prismjs/components/prism-core');
 const components = require('prismjs/components/index');
@@ -22,7 +23,7 @@ const components = require('prismjs/components/index');
 // Load all components
 components();
 
-module.exports = md({
+const md = markdown({
   html: true,
   linkify: true,
   typographer: true,
@@ -36,6 +37,13 @@ module.exports = md({
   .use(require('markdown-it-abbr'))
   .use(require('markdown-it-emoji'))
   .use(require('markdown-it-attrs'))
+  .use(require('markdown-it-figure'))
+  .use(require('markdown-it-video'))
+  .use(require('markdown-it-anchor'), {
+    slugify: s => uslug(s),
+    permalink: true,
+    permalinkBefore: true,
+  })
   .use(require('markdown-it-container'), 'emmet', {
     marker: '!',
     validate(params) {
@@ -58,3 +66,5 @@ module.exports = md({
       return expanded.substring(closing, expanded.length);
     },
   });
+
+module.exports = md;

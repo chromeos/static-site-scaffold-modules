@@ -1,6 +1,6 @@
 {
   "name": "static-site-scaffold",
-  "version": "3.0.1",
+  "version": "3.1.0",
   "description": "Eleventy based static site scaffolding",
   "main": "lib/11ty.config.js",
   "contributors": [
@@ -67,14 +67,17 @@
     "lodash.clonedeep": "^4.5.0",
     "markdown-it": "^9.1.0",
     "markdown-it-abbr": "^1.0.4",
+    "markdown-it-anchor": "^5.2.5",
     "markdown-it-attrs": "^3.0.1",
     "markdown-it-container": "^2.0.0",
     "markdown-it-deflist": "^2.0.3",
     "markdown-it-emoji": "^1.4.0",
+    "markdown-it-figure": "^0.2.0",
     "markdown-it-footnote": "^3.0.2",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
-    "node-sass": "^4.12.0",
+    "markdown-it-video": "^0.6.3",
+    "node-sass": "^4.13.1",
     "npm-run": "^5.0.1",
     "prismjs": "^1.17.1",
     "rollup-plugin-babel": "^4.3.3",
@@ -82,6 +85,7 @@
     "rollup-plugin-node-resolve": "^5.2.0",
     "rollup-plugin-replace": "^2.2.0",
     "rollup-plugin-terser": "^5.1.3",
-    "rollup-plugin-workbox-inject": "^1.0.1"
+    "rollup-plugin-workbox-inject": "^1.0.1",
+    "uslug": "^1.0.4"
   }
 }
