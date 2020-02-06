@@ -39,6 +39,8 @@ const md = markdown({
   .use(require('markdown-it-attrs'))
   .use(require('markdown-it-figure'))
   .use(require('markdown-it-video'))
+  .use(require('markdown-it-header-sections'))
+  .use(require('markdown-it-kbd'))
   .use(require('markdown-it-anchor'), {
     slugify: s => uslug(s),
     permalink: true,
@@ -65,6 +67,7 @@ const md = markdown({
       const closing = expanded.lastIndexOf('</');
       return expanded.substring(closing, expanded.length);
     },
-  });
+  })
+  .disable('code');
 
 module.exports = md;

@@ -1,6 +1,6 @@
 {
   "name": "static-site-scaffold",
-  "version": "3.1.0",
+  "version": "3.2.0",
   "description": "Eleventy based static site scaffolding",
   "main": "lib/11ty.config.js",
   "contributors": [
@@ -74,6 +74,8 @@
     "markdown-it-emoji": "^1.4.0",
     "markdown-it-figure": "^0.2.0",
     "markdown-it-footnote": "^3.0.2",
+    "markdown-it-header-sections": "^1.0.0",
+    "markdown-it-kbd": "^2.0.0",
     "markdown-it-sub": "^1.0.0",
     "markdown-it-sup": "^1.0.0",
     "markdown-it-video": "^0.6.3",
