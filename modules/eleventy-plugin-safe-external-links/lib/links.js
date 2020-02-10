@@ -38,7 +38,7 @@ function safeExternalLinksSetup(config = {}) {
     if (!files.includes(ext)) return content;
 
     try {
-      const $ = cheerio.load(content, { xmlMode: true });
+      const $ = cheerio.load(content, { useHtmlParser2: true });
       const links = $('a').get();
 
       if (links.length) {
