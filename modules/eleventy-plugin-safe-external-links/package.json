@@ -1,0 +1,34 @@
+{
+  "name": "eleventy-plugin-safe-external-links",
+  "version": "0.1.0",
+  "description": "Eleventy plugin for ensuring safe external links",
+  "keywords": [
+    "eleventy",
+    "security"
+  ],
+  "main": "index.js",
+  "scripts": {
+    "pretest": "eslint .",
+    "test": "echo \"Error: no test specified\""
+  },
+  "ava": {
+    "files": [
+      "tests/**/*"
+    ]
+  },
+  "contributors": [
+    "Sam Richard <snugug@google.com> (https://snugug.com)"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/chromeos/static-site-scaffold-modules.git"
+  },
+  "bugs": {
+    "url": "https://github.com/chromeos/static-site-scaffold-modules/issues"
+  },
+  "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "cheerio": "^1.0.0-rc.3"
+  }
+}
