@@ -16,6 +16,7 @@
 const config = require('config');
 
 const pluginLocalRespimg = require('eleventy-plugin-local-respimg');
+const pluginSafeExternalLinks = require('eleventy-plugin-safe-external-links');
 
 const markdown = require('./11ty/markdown');
 const l10n = require('./11ty/l10n');
@@ -35,6 +36,8 @@ function configEleventy(eleventy) {
   eleventy.setLibrary('md', markdown);
 
   eleventy.addPlugin(pluginLocalRespimg, config);
+
+  eleventy.addPlugin(pluginSafeExternalLinks, config.externalLinks || {});
 
   const inputAbsolute = path.join(process.cwd(), config.folders.pages);
   const includesAbsolute = path.join(process.cwd(), config.folders.templates, config.folders.includes);
