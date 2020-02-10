@@ -1,6 +1,6 @@
 {
   "name": "eleventy-plugin-safe-external-links",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Eleventy plugin for ensuring safe external links",
   "keywords": [
     "eleventy",
