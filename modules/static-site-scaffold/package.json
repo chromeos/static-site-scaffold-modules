@@ -1,6 +1,6 @@
 {
   "name": "static-site-scaffold",
-  "version": "3.3.1",
+  "version": "3.3.2",
   "description": "Eleventy based static site scaffolding",
   "main": "lib/11ty.config.js",
   "contributors": [
@@ -54,7 +54,7 @@
     "config": "^3.2.4",
     "critical": "^2.0.0-23",
     "eleventy-plugin-local-respimg": "^0.1.4",
-    "eleventy-plugin-safe-external-links": "^0.1.2",
+    "eleventy-plugin-safe-external-links": "^0.1.3",
     "gulp-cached": "^1.1.1",
     "gulp-eslint": "^6.0.0",
     "gulp-htmlmin": "^5.0.1",
