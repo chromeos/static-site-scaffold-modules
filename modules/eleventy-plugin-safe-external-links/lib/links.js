@@ -38,7 +38,7 @@ function safeExternalLinksSetup(config = {}) {
     if (!files.includes(ext)) return content;
 
     try {
-      const $ = cheerio.load(content, { useHtmlParser2: true });
+      const $ = cheerio.load(content);
       const links = $('a').get();
 
       if (links.length) {
@@ -64,7 +64,13 @@ function safeExternalLinksSetup(config = {}) {
           }
         }
 
-        return $.html();
+        const hasBody = /<\s*body(\w|\s|=|"|-)*>/gm;
+
+        if (hasBody.test(content)) {
+          return $.html();
+        }
+
+        return $('body').html();
       }
     } catch (e) {
       // console.error(e);
