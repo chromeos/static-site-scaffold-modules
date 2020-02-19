@@ -67,7 +67,7 @@ function respimgSetup(config) {
     await Promise.all(toOptimize.map(f => optimizeAdditional(f, config)));
 
     if (outputPath.endsWith('.html')) {
-      const $ = cheerio.load(content, { useHtmlParser2: true });
+      const $ = cheerio.load(content);
 
       const images = $(':not(picture) img').get();
       // const pictures = $('picture img, picture source');
@@ -143,7 +143,13 @@ function respimgSetup(config) {
           }
         }
 
-        return $.html();
+        const hasBody = /<\s*body(\w|\s|=|"|-)*>/gm;
+
+        if (hasBody.test(content)) {
+          return $.html();
+        }
+
+        return $('body').html();
       }
     }
 
