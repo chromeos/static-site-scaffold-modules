@@ -40,7 +40,7 @@ function configEleventy(eleventy) {
 
   eleventy.addPlugin(pluginSafeExternalLinks, config.externalLinks || {});
 
-  eleventy.addWatchTarget(path.join(config.folders.pages, `(${ISO6391.getAllCodes().join('|')})`, '_data', '*.{json,js,yaml,yml}'));
+  eleventy.addWatchTarget(path.join(config.folders.pages, `{${ISO6391.getAllCodes().join(',')}}`, '_data', '*.{json,js,yaml,yml}'));
 
   const inputAbsolute = path.join(process.cwd(), config.folders.pages);
   const includesAbsolute = path.join(process.cwd(), config.folders.templates, config.folders.includes);
