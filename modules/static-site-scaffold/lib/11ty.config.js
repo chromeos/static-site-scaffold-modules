@@ -14,6 +14,7 @@
  * limitations under the License.
  */
 const config = require('config');
+const ISO6391 = require('iso-639-1');
 
 const pluginLocalRespimg = require('eleventy-plugin-local-respimg');
 const pluginSafeExternalLinks = require('eleventy-plugin-safe-external-links');
@@ -38,6 +39,8 @@ function configEleventy(eleventy) {
   eleventy.addPlugin(pluginLocalRespimg, config);
 
   eleventy.addPlugin(pluginSafeExternalLinks, config.externalLinks || {});
+
+  eleventy.addWatchTarget(path.join(config.folders.pages, `(${ISO6391.getAllCodes().join('|')})`, '_data', '*.{json,js,yaml,yml}'));
 
   const inputAbsolute = path.join(process.cwd(), config.folders.pages);
   const includesAbsolute = path.join(process.cwd(), config.folders.templates, config.folders.includes);
