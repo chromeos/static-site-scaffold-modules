@@ -1,6 +1,6 @@
 {
   "name": "static-site-scaffold",
-  "version": "3.4.0-beta.3",
+  "version": "3.4.0",
   "description": "Eleventy based static site scaffolding",
   "main": "lib/11ty.config.js",
   "contributors": [
