@@ -44,7 +44,21 @@ const md = markdown({
   .use(require('markdown-it-anchor'), {
     slugify: s => uslug(s),
     permalink: true,
-    permalinkBefore: true,
+    renderPermalink(slug, opts, state, idx) {
+      const linkTokens = [
+        Object.assign(new state.Token('link_open', 'a', 1), {
+          attrs: [
+            ['class', 'header-anchor'],
+            ['href', `#${slug}`],
+          ],
+        }),
+        ...state.tokens[idx + 1].children,
+      ];
+
+      linkTokens.push(new state.Token('link_close', 'a', -1));
+
+      state.tokens[idx + 1].children = linkTokens;
+    },
   })
   .use(require('markdown-it-container'), 'emmet', {
     marker: '!',
