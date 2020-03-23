@@ -58,9 +58,11 @@ function safeExternalLinksSetup(config = {}) {
         for (let i = 0; i < links.length; i++) {
           const link = links[i];
           const href = $(link).attr('href');
+          let rel = $(link).attr('rel');
+
+          rel = rel ? rel.split(' ') : [];
 
           if (pattern.test(href)) {
-            const rel = [];
             if (noopener) {
               rel.push('noopener');
             }
