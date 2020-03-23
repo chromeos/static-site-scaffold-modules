@@ -36,5 +36,8 @@
     "commitizen": {
       "path": "./modules/emoji-commit-helpers/commitizen.js"
     }
+  },
+  "volta": {
+    "node": "12.16.1"
   }
 }
