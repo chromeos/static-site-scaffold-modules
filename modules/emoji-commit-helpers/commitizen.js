@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 const config = require('./lib/config');
-const fuse = require('fuse.js');
+const Fuse = require('fuse.js');
 const wrap = require('wrap-ansi');
 
 /**
@@ -46,7 +46,7 @@ async function createQuestions() {
   const choices = generateAutocomplete(config.emoji);
   const scopeChoices = generateAutocomplete(await config.scopes());
 
-  const fuzzy = new fuse(choices, {
+  const fuzzy = new Fuse(choices, {
     shouldSort: true,
     threshold: 0.4,
     location: 0,
@@ -56,7 +56,7 @@ async function createQuestions() {
     keys: ['name', 'code'],
   });
 
-  const fuzzyScope = new fuse(scopeChoices, {
+  const fuzzyScope = new Fuse(scopeChoices, {
     shouldSort: true,
     threshold: 0.4,
     location: 0,
