@@ -17,14 +17,27 @@ const cheerio = require('cheerio');
 const path = require('path');
 
 /**
+ * HOP - Has Own Property
+ *
+ * @param {object} obj - Object to test
+ * @param {string} prop - The name of the property to test for
+ * @param {*} fallback - The fallback if that property isn't found
+ *
+ * @return {*} Either the property from that object, if found or the fallback
+ */
+function hop(obj, prop, fallback) {
+  return Object.prototype.hasOwnProperty.call(obj, prop) ? obj[prop] : fallback;
+}
+
+/**
  *
  * @param {object} config
  * @return {function}
  */
 function safeExternalLinksSetup(config = {}) {
   const pattern = new RegExp(config.pattern || 'https{0,1}://');
-  const noopener = config.hasOwnProperty('noopener') ? config.noopener : true;
-  const noreferrer = config.hasOwnProperty('noreferrer') ? config.noreferrer : false;
+  const noopener = hop(config, 'noopener', true);
+  const noreferrer = hop(config, 'noreferrer', false);
   const files = config.files || ['.html'];
 
   /**
