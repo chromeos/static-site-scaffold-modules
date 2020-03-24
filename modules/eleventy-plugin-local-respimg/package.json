@@ -42,7 +42,8 @@
     "imagemin-pngquant": "^8.0.0",
     "imagemin-svgo": "^7.0.0",
     "imagemin-webp": "^5.1.0",
+    "merge-deep": "^3.0.2",
     "replace-ext": "^1.0.0",
-    "sharp": "^0.23.4"
+    "sharp": "^0.25.2"
   }
 }

@@ -17,6 +17,7 @@ const cheerio = require('cheerio');
 const FileType = require('file-type');
 const imageSize = require('image-size');
 const glob = require('fast-glob');
+const merge = require('merge-deep');
 
 const { readFileSync, ensureDirSync } = require('fs-extra');
 const { writeFile } = require('fs').promises;
@@ -27,15 +28,39 @@ const { resizeAndOptimize, optimizeAdditional } = require('./resize');
 
 const imagemap = {};
 
+const baseConfig = {
+  folders: {
+    source: 'src',
+    output: 'dest',
+  },
+  images: {
+    resize: {
+      min: 250,
+      max: 1500,
+      step: 150,
+    },
+    sizes: '100vw',
+    lazy: true,
+    additional: [],
+    watch: {
+      src: 'images/**/*',
+      dest: 'images/**/*',
+    },
+  },
+};
+
 /**
- * @param {object} config
+ * @param {object} userConfig - Configuration
  * @return {function}
  */
-function respimgSetup(config) {
+function respimgSetup(userConfig = {}) {
   /**
    * @param {string} content
    * @param {string} outputPath
    */
+
+  const config = merge(baseConfig, userConfig);
+
   return async function respimg(content, outputPath) {
     // Move Additional Over
     const toOptimize = [];
