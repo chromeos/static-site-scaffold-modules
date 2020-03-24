@@ -36,7 +36,7 @@ test.after.always('Cleanup Output Images', async t => {
   await rimraf(outputBase);
 });
 
-test('Optimizes SVGs', async t => {
+test.serial('Optimizes SVGs', async t => {
   const input = '<img src="/images/fish.svg" alt="Fish">';
   const outputImages = path.join(outputBase, 'optimize');
   const outputPath = 'file.html';
@@ -50,5 +50,23 @@ test('Optimizes SVGs', async t => {
   const expectedImages = ['fish.svg'];
 
   t.is(await transformer(input, outputPath), output);
+  t.deepEqual(readdirSync(path.join(outputImages, 'images')), expectedImages);
+});
+
+test.serial('Image in headline', async t => {
+  const input = '<h2><img src="/images/fish.svg" alt="Fish"> A headline with an icon</h2>';
+  const outputImages = path.join(outputBase, 'headline');
+  const outputPath = 'file.html';
+  const output = '<h2><img src="/images/fish.svg" alt="Fish" height="192" width="192" loading="lazy"> A headline with an icon</h2>';
+  const transformer = respimgSetup({
+    folders: {
+      source: sourcePath,
+      output: outputImages,
+    },
+  });
+  const expectedImages = [];
+
+  t.is(await transformer(input, outputPath), output);
+  // No images should be moved thanks to intelligent caching
   t.deepEqual(readdirSync(path.join(outputImages, 'images')), expectedImages);
 });
