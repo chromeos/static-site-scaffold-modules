@@ -10,7 +10,8 @@
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "echo \"Error: no test specified\""
+    "test": "nyc ava -v --color",
+    "test:lerna": "lerna run --scope \"${PWD##*/}\" test"
   },
   "ava": {
     "files": [
@@ -45,5 +46,8 @@
     "merge-deep": "^3.0.2",
     "replace-ext": "^1.0.0",
     "sharp": "^0.25.2"
+  },
+  "devDependencies": {
+    "rimraf": "^3.0.2"
   }
 }
