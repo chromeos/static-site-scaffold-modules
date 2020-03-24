@@ -13,11 +13,11 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import test from 'ava';
-import rollup from '../lib/rollup.config.js';
-import config from 'config';
-import path from 'path';
-import clone from 'lodash.clonedeep';
+const test = require('ava');
+const rollup = require('../lib/rollup.config');
+const config = require('config');
+const path = require('path');
+const clone = require('lodash.clonedeep');
 
 test('ESM exported correctly', t => {
   // ESMs

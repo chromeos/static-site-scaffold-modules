@@ -26,15 +26,11 @@
     "test:lint": "eslint tests",
     "js:lint": "eslint lib tests",
     "lint": "NODE_ENV=production run-p test:lint js:lint",
-    "test": "nyc ava",
+    "test": "nyc ava -v --color",
+    "test:lerna": "lerna run --scope \"${PWD##*/}\" test",
     "fix": "eslint tests --fix"
   },
   "license": "Apache-2.0",
-  "ava": {
-    "files": [
-      "tests/**/*"
-    ]
-  },
   "nyc": {
     "include": [
       "lib/**/*.js"

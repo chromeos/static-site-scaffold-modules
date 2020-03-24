@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import test from 'ava';
-import md from '../lib/11ty/markdown.js';
+const test = require('ava');
+const md = require('../lib/11ty/markdown');
 
 test('compiles markdown', t => {
   const input = '# Hello world';
