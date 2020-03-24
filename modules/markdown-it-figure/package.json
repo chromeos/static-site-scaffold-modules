@@ -9,12 +9,8 @@
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "nyc ava"
-  },
-  "ava": {
-    "files": [
-      "tests/**/*"
-    ]
+    "test": "nyc ava -v --color",
+    "test:lerna": "lerna run --scope \"${PWD##*/}\" test"
   },
   "contributors": [
     "Sam Richard <snugug@google.com> (https://snugug.com)"
