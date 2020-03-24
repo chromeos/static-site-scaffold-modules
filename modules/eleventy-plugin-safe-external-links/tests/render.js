@@ -14,8 +14,8 @@
  * limitations under the License.
  */
 
-import test from 'ava';
-import safeExternalLinksSetup from '../lib/links';
+const test = require('ava');
+const safeExternalLinksSetup = require('../lib/links');
 
 test('No config', t => {
   const input = '<a href="https://foo.com" rel="banana">Hello World</a>';

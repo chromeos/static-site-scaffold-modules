@@ -9,8 +9,8 @@
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "nyc ava",
-    "test:lerna": "lerna run --scope eleventy-plugin-safe-external-links test"
+    "test": "nyc ava -v --color",
+    "test:lerna": "lerna run --scope \"${PWD##*/}\" test"
   },
   "ava": {
     "files": [
