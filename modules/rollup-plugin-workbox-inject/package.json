@@ -5,16 +5,12 @@
   "main": "index.js",
   "scripts": {
     "pretest": "eslint .",
-    "test": "nyc ava"
+    "test": "nyc ava -v --color",
+    "test:lerna": "lerna run --scope \"${PWD##*/}\" test"
   },
   "keywords": [
     "rollup-plugin"
   ],
-  "ava": {
-    "files": [
-      "tests/**/*"
-    ]
-  },
   "contributors": [
     "Sam Richard <snugug@google.com> (https://snugug.com)"
   ],

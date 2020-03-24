@@ -13,8 +13,8 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import test from 'ava';
-import workboxInject from '../index.js';
+const test = require('ava');
+const workboxInject = require('../index.js');
 
 test('Is a thing', t => {
   const plugin = workboxInject();
