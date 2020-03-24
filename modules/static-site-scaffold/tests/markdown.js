@@ -19,7 +19,7 @@ const md = require('../lib/11ty/markdown');
 test('compiles markdown', t => {
   const input = '# Hello world';
   const output = md.render(input);
-  const expected = '<h1>Hello world</h1>\n';
+  const expected = '<section>\n<h1 id="hello-world"><a class="header-anchor" href="#hello-world">Hello world</a></h1>\n</section>\n';
   t.is(output, expected);
 });
 
@@ -73,7 +73,7 @@ test('transforms emoji', t => {
 test('transforms attributes', t => {
   const input = '# header {.style-me}\nparagraph {data-toggle=modal}';
   const output = md.render(input);
-  const expected = '<h1 class="style-me">header</h1>\n<p data-toggle="modal">paragraph</p>\n';
+  const expected = '<section class="style-me">\n<h1 class="style-me" id="header"><a class="header-anchor" href="#header">header</a></h1>\n<p data-toggle="modal">paragraph</p>\n</section>\n';
   t.is(output, expected);
 });
 
