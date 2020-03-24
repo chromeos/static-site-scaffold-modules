@@ -21,6 +21,7 @@ const { basename, extname, join } = require('path');
  * Builds locale data files from JSON files in the language's `_data` directory
  *
  * @param {string} dirname - Path to start search from
+ * @param {string} fallback - Locale code to fall back to. Defaults to 'en'
  * @return {object}
  */
 function getLocalData(dirname, fallback = 'en') {
