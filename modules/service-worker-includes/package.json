@@ -1,6 +1,6 @@
 {
   "name": "service-worker-includes",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Service Worker Includes using Workbox",
   "browser": "index.js",
   "type": "module",
