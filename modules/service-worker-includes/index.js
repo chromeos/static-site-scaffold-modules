@@ -23,11 +23,11 @@ import { matchPrecache } from 'workbox-precaching';
  * @return {request} Either the original request or a normalized request
  */
 async function normalizeIfNeeded({ request }) {
-  // Clean out query parameters, and add a trailing '/' if missing.
+  // Clean out query parameters, and removes a trailing '/' if there.
   const url = new URL(request.url);
   let cleanUrl = url.origin + url.pathname;
-  if (!cleanUrl.endsWith('/')) {
-    cleanUrl += '/';
+  if (cleanUrl.endsWith('/')) {
+    cleanUrl = cleanUrl.slice(0, -1);
   }
   return new Request(cleanUrl);
 }
