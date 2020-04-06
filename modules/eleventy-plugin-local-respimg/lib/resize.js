@@ -21,6 +21,7 @@ const pngquant = require('imagemin-pngquant');
 const gif2webp = require('imagemin-gif2webp');
 const svgo = require('imagemin-svgo');
 const gifResize = require('@gumlet/gif-resize');
+const ffmpeg = require('fluent-ffmpeg');
 
 const { ensureDirSync } = require('fs-extra');
 
@@ -130,8 +131,32 @@ function generateWebp(buff, config) {
   });
 }
 
+/**
+ *
+ * @param {string} src
+ * @param {object} config
+ * @return {Promise}
+ */
+function generateVideo(src, config) {
+  return new Promise((resolve, reject) => {
+    const output = outputURL(src, 'xform', 'mp4', config.folders.output);
+    ffmpeg(path.join(config.folders.source, src))
+      .output(output)
+      .addOutputOption('-movflags faststart')
+      .addOutputOption('-pix_fmt yuv420p')
+      .on('error', err => {
+        reject(err);
+      })
+      .on('end', () => {
+        resolve(output);
+      })
+      .run();
+  });
+}
+
 module.exports = {
   resizeAndOptimize,
   optimizeAdditional,
+  generateVideo,
   generateWebp,
 };

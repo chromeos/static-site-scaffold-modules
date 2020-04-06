@@ -24,7 +24,7 @@ const { writeFile } = require('fs').promises;
 const path = require('path');
 
 const { guessLength, generateSrcset, determineImagePath } = require('./helpers');
-const { resizeAndOptimize, optimizeAdditional } = require('./resize');
+const { resizeAndOptimize, optimizeAdditional, generateVideo } = require('./resize');
 
 const imagemap = {};
 
@@ -39,6 +39,7 @@ const baseConfig = {
       max: 1500,
       step: 150,
     },
+    gifToVideo: false,
     sizes: '100vw',
     lazy: true,
     additional: [],
@@ -113,57 +114,65 @@ function respimgSetup(userConfig = {}) {
             const type = await FileType.fromBuffer(file);
             const size = imageSize(file);
 
-            if (path.extname(src) === '.svg') {
-              type.mime = 'image/svg';
-              type.ext = 'svg';
-            }
-
-            const step = config.images.resize.step;
-            const min = config.images.resize.min;
-            const max = config.images.resize.max;
-
-            const genMax = max < size.width ? max : size.width;
-            const sizes = [];
-
-            if (min + step <= size.width) {
-              for (let i = min; i < genMax; i += step) {
-                sizes.push(i);
-              }
-            }
-
-            sizes.push(genMax);
-
-            // Set height, width, and lazy loading attributes
-            $(image).attr('height', (genMax / size.width) * size.height);
-            $(image).attr('width', genMax);
-            if (config.images.lazy) {
-              $(image).attr('loading', 'lazy');
-            }
-
-            let optimize = true;
-            if (Object.keys(imagemap).includes(src)) {
-              optimize = !imagemap[src].buff.equals(file);
+            if (config.images.gifToVideo && type.mime === 'image/gif') {
+              await generateVideo(src, config);
+              const video = `<video src="${generateSrcset(['xform'], src, 'mp4').slice(0, -7)}" type="video/mp4" autoplay loop muted playsinline controls height="${size.height}" width="${size.width}">${$(image).attr('alt')}</video>`;
+              $(image).replaceWith(video);
             } else {
-              imagemap[src] = {
-                buff: file,
-                length: guessLength(sizes, type.mime),
-              };
-            }
+              if (path.extname(src) === '.svg') {
+                type.mime = 'image/svg';
+                type.ext = 'svg';
+              }
 
-            if (optimize) {
-              await Promise.all((await Promise.all(await resizeAndOptimize(sizes, type, src, file, config))).flat().map(f => writeFile(f.dest, f.buff)));
-            }
+              const step = config.images.resize.step;
+              const min = config.images.resize.min;
+              const max = config.images.resize.max;
 
-            if (imagemap[src].length > 1) {
-              const baseSrcset = generateSrcset(sizes, src, type.ext);
-              const webpSrcset = generateSrcset(sizes, src, 'webp');
+              const genMax = max < size.width ? max : size.width;
+              const sizes = [];
 
-              const imgHTML = $.html(image);
-              let img = `<picture>`;
-              img += `<source srcset="${webpSrcset}" sizes="${respSizes}" type="image/webp">`;
-              img += `<source srcset="${baseSrcset}" sizes="${respSizes}" type="${type.mime}">`;
-              img += `${imgHTML}</picture>`;
-              $(image).replaceWith(img);
+              if (min + step <= size.width) {
+                for (let i = min; i < genMax; i += step) {
+                  sizes.push(i);
+                }
+              }
+
+              sizes.push(genMax);
+
+              // Set height, width, and lazy loading attributes
+              const height = (genMax / size.width) * size.height;
+              const width = genMax;
+              $(image).attr('height', height);
+              $(image).attr('width', width);
+              if (config.images.lazy) {
+                $(image).attr('loading', 'lazy');
+              }
+
+              let optimize = true;
+              if (Object.keys(imagemap).includes(src)) {
+                optimize = !imagemap[src].buff.equals(file);
+              } else {
+                imagemap[src] = {
+                  buff: file,
+                  length: guessLength(sizes, type.mime),
+                };
+              }
+
+              if (optimize) {
+                await Promise.all((await Promise.all(await resizeAndOptimize(sizes, type, src, file, config))).flat().map(f => writeFile(f.dest, f.buff)));
+              }
+
+              if (imagemap[src].length > 1) {
+                const baseSrcset = generateSrcset(sizes, src, type.ext);
+                const webpSrcset = generateSrcset(sizes, src, 'webp');
+
+                const imgHTML = $.html(image);
+                let img = `<picture>`;
+                img += `<source srcset="${webpSrcset}" sizes="${respSizes}" type="image/webp">`;
+                img += `<source srcset="${baseSrcset}" sizes="${respSizes}" type="${type.mime}">`;
+                img += `${imgHTML}</picture>`;
+                $(image).replaceWith(img);
+              }
             }
           }
         }
