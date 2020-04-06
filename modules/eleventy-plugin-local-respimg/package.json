@@ -15,7 +15,8 @@
   },
   "ava": {
     "files": [
-      "tests/**/*"
+      "tests/**/*",
+      "!tests/helpers/**/*"
     ]
   },
   "contributors": [

@@ -22,6 +22,7 @@ const rimraf = promisify(require('rimraf'));
 
 const path = require('path');
 const { readdirSync, readFileSync } = require('fs');
+const { getVideoMetadata } = require('./helpers/gif');
 
 const respimgSetup = require('../lib/respimg');
 
@@ -31,6 +32,15 @@ const outputBase = path.join(__dirname, 'output', 'gif');
 // Ensure no images exist in the output base before starting
 test.before('Cleanup Output Images', async t => {
   await rimraf(outputBase);
+
+  const source = {
+    file: readFileSync(path.join(sourcePath, '/images/fugu-edit.gif')),
+  };
+  source.size = imageSize(source.file); // .height, .width, .type
+  source.type = await FileType.fromBuffer(source.file); // ext, mine image/png image/webp
+  source.ratio = source.size.height / source.size.width;
+
+  t.context.source = source;
 });
 
 // Clean up after yourself
@@ -54,18 +64,11 @@ test('Optimizes GIFs, puts them in <picture>, generates WebP', async t => {
   t.is(await transformer(input, outputPath), output);
   t.deepEqual(readdirSync(path.join(outputImages, 'images')), expectedImages);
 
-  const source = {
-    file: readFileSync(path.join(sourcePath, '/images/fugu-edit.gif')),
-  };
-  source.size = imageSize(source.file); // .height, .width, .type
-  source.type = await FileType.fromBuffer(source.file); // ext, mine image/png image/webp
-  source.ratio = source.size.height / source.size.width;
-
   for (const image of expectedImages) {
     const output = readFileSync(path.join(outputImages, 'images', image));
     const expected = {
       width: parseInt(image.split('.')[1]),
-      height: Math.round(parseInt(image.split('.')[1]) * source.ratio),
+      height: Math.round(parseInt(image.split('.')[1]) * t.context.source.ratio),
       type: `image/${image.split('.')[2]}`,
     };
     const actual = {
@@ -77,4 +80,35 @@ test('Optimizes GIFs, puts them in <picture>, generates WebP', async t => {
     t.is(actual.size.height, expected.height);
     t.is(actual.type.mime, expected.type);
   }
+});
+
+test('Optimizes GIFs as videos', async t => {
+  const input = '<img src="/images/fugu-edit.gif" alt="Fugu Edit">';
+  const outputImages = path.join(outputBase, 'video');
+  const outputPath = 'file.html';
+  const output = '<video src="/images/fugu-edit.xform.mp4" type="video/mp4" autoplay loop muted playsinline controls height="270" width="480">Fugu Edit</video>';
+
+  const config = {
+    folders: {
+      source: sourcePath,
+      output: outputImages,
+    },
+    images: {
+      gifToVideo: true,
+    },
+  };
+
+  const transformer = respimgSetup(config);
+
+  const expectedVideo = 'fugu-edit.xform.mp4';
+
+  t.is(await transformer(input, outputPath), output);
+
+  const outputFile = path.join(outputImages, 'images', expectedVideo);
+  const metadata = await getVideoMetadata(outputFile);
+
+  t.is(metadata.streams[0].width, t.context.source.size.width);
+  t.is(metadata.streams[0].height, t.context.source.size.height);
+  t.is(metadata.streams[0].codec_name, 'h264');
+  t.true(metadata.format.format_name.split(',').includes('mp4'));
 });
