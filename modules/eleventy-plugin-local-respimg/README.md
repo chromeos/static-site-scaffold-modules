@@ -6,7 +6,7 @@ Supported image types:
 
 - _png_ - optimize/resize/webp
 - _jpg_ - optimize/resize/webp
-- _gif_ - optimize/resize/webp
+- _gif_ - optimize/resize/webp/mp4
 - _svg_ - optimize
 
 ## Usage
@@ -26,6 +26,7 @@ module.exports = function(eleventyConfig) {
         max: 1500, // Maximum width to resize an image to
         step: 150, // Width difference between each resized image
       },
+      gifToVideo: false // Convert GIFs to MP4 videos
       sizes: '100vw', // Default image `sizes` attribute
       lazy: true, // Include `loading="lazy"` attribute for images
       additional: [
