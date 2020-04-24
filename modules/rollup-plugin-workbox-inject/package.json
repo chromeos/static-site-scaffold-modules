@@ -20,11 +20,12 @@
   },
   "license": "Apache-2.0",
   "peerDependencies": {
-    "workbox-build": "^5.0.0-rc.1"
+    "workbox-build": "^5.0.0"
   },
   "dependencies": {
     "chalk": "^3.0.0",
     "fast-json-stable-stringify": "^2.1.0",
-    "workbox-build": "^5.0.0-rc.1"
+    "upath": "^1.2.0",
+    "workbox-build": "^5.0.0"
   }
 }
