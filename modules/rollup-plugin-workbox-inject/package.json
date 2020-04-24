@@ -26,5 +26,8 @@
     "chalk": "^3.0.0",
     "fast-json-stable-stringify": "^2.1.0",
     "workbox-build": "^5.0.0-rc.1"
-  }
+  },
+  "files": [
+    "index.js"
+  ]
 }
