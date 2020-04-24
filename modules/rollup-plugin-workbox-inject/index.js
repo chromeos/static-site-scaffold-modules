@@ -18,6 +18,7 @@ const chalk = require('chalk');
 const defaults = require('workbox-build/src/options/defaults');
 const getFileManifestEntries = require('workbox-build/src/lib/get-file-manifest-entries');
 const getManifestSchema = require('workbox-build/src/options/schema/get-manifest');
+const prettyBytes = require('pretty-bytes');
 const rebasePath = require('workbox-build/src/lib/rebase-path');
 const replaceAndUpdateSourceMap = require('workbox-build/src/lib/replace-and-update-source-map');
 const stringify = require('fast-json-stable-stringify');
@@ -77,6 +78,7 @@ function workboxInject(config) {
 
       const manifestString = stringify(manifestEntries);
 
+      let noInjectionPointFound = true;
       for (const chunk of Object.values(bundle)) {
         // This might actually be an asset (which won't have a code property)
         // and not a chunk. If so, continue.
@@ -85,6 +87,7 @@ function workboxInject(config) {
         }
 
         if (chunk.code.includes(injectionPoint)) {
+          noInjectionPointFound = false;
           if (chunk.map) {
             const { map, source } = await replaceAndUpdateSourceMap({
               originalMap: chunk.map,
@@ -100,11 +103,17 @@ function workboxInject(config) {
           }
 
           const warn = `\nThere ${warnings.length > 1 ? 'were' : 'was'} ${chalk.red(warnings.length)} ${warnings.length > 1 ? 'warnings' : 'warning'}.`;
-          console.log(`Injected ${chalk.cyan(count + ' files')} for precaching, ${chalk.cyan(size * 0.001 + ' KB')} total, into ${chalk.cyan(chunk.fileName)}.${warnings.length ? warn : ''}`);
+          console.log(`Injected ${chalk.cyan(count + ' files')} for precaching, ${chalk.cyan(prettyBytes(size))} total, into ${chalk.cyan(chunk.fileName)}.${warnings.length ? warn : ''}`);
           if (warnings.length) {
             warnings.forEach(w => console.warn(w));
           }
         }
+      }
+
+      if (noInjectionPointFound) {
+        throw new Error(`Unable to find a place to inject the precache ` +
+          `manifest. Please ensure your service worker contains ` +
+          `"${injectionPoint}" somewhere in its code.`);
       }
     },
   };
