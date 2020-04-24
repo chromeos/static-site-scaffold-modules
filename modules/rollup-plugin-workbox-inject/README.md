@@ -16,7 +16,7 @@ module.exports = {
     workbox({
       swSrc: 'src/sw.js',
       swDest: 'public/sw.js',
-      globDirectory: 'public'
+      globDirectory: 'public',
       globPatterns: [
         'css/**/*.css',
         'js/**/*.js'
