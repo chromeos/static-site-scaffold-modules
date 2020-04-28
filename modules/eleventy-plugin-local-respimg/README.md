@@ -26,11 +26,11 @@ module.exports = function(eleventyConfig) {
         max: 1500, // Maximum width to resize an image to
         step: 150, // Width difference between each resized image
       },
-      gifToVideo: false // Convert GIFs to MP4 videos
+      gifToVideo: false, // Convert GIFs to MP4 videos
       sizes: '100vw', // Default image `sizes` attribute
       lazy: true, // Include `loading="lazy"` attribute for images
       additional: [
-        // Globs of additional images to optimize (won't be resied)
+        // Globs of additional images to optimize (won't be resized)
         'images/icons/**/*',
       ],
       watch: {
