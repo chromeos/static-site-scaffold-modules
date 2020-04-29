@@ -15,15 +15,15 @@
  */
 
 const chalk = require('chalk');
-const defaults = require('workbox-build/src/options/defaults');
-const getFileManifestEntries = require('workbox-build/src/lib/get-file-manifest-entries');
-const getManifestSchema = require('workbox-build/src/options/schema/get-manifest');
+const defaults = require('workbox-build/build/options/defaults');
+const getFileManifestEntries = require('workbox-build/build/lib/get-file-manifest-entries');
+const getManifestSchema = require('workbox-build/build/options/schema/get-manifest');
 const prettyBytes = require('pretty-bytes');
-const rebasePath = require('workbox-build/src/lib/rebase-path');
-const replaceAndUpdateSourceMap = require('workbox-build/src/lib/replace-and-update-source-map');
+const rebasePath = require('workbox-build/build/lib/rebase-path');
+const replaceAndUpdateSourceMap = require('workbox-build/build/lib/replace-and-update-source-map');
 const stringify = require('fast-json-stable-stringify');
 const upath = require('upath');
-const validate = require('workbox-build/src/lib/validate-options');
+const validate = require('workbox-build/build/lib/validate-options');
 
 /**
  * Rollup plugin to inject Workbox precaching information in-line
