@@ -22,6 +22,9 @@
   "peerDependencies": {
     "workbox-build": "^5.0.0"
   },
+  "files": [
+    "index.js"
+  ],
   "dependencies": {
     "chalk": "^3.0.0",
     "fast-json-stable-stringify": "^2.1.0",
