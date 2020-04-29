@@ -13,14 +13,17 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-const escapeRegexp = require('workbox-build/src/lib/escape-regexp');
+
+const chalk = require('chalk');
+const defaults = require('workbox-build/src/options/defaults');
 const getFileManifestEntries = require('workbox-build/src/lib/get-file-manifest-entries');
-const injectManifestSchema = require('workbox-build/src/options/schema/inject-manifest');
+const getManifestSchema = require('workbox-build/src/options/schema/get-manifest');
+const prettyBytes = require('pretty-bytes');
 const rebasePath = require('workbox-build/src/lib/rebase-path');
-const validate = require('workbox-build/src/lib/validate-options');
 const replaceAndUpdateSourceMap = require('workbox-build/src/lib/replace-and-update-source-map');
 const stringify = require('fast-json-stable-stringify');
-const chalk = require('chalk');
+const upath = require('upath');
+const validate = require('workbox-build/src/lib/validate-options');
 
 /**
  * Rollup plugin to inject Workbox precaching information in-line
@@ -31,43 +34,86 @@ const chalk = require('chalk');
 function workboxInject(config) {
   return {
     name: 'workbox-inject', // this name will show up in warnings and errors
-    async generateBundle(opts, bundle) {
-      const options = validate(config, injectManifestSchema);
-      // Make sure we leave swSrc and swDest out of the precache manifest.
-      for (const file of [options.swSrc, options.swDest]) {
-        options.globIgnores.push(
-          rebasePath({
-            file,
+    async generateBundle(outputOptions, bundle) {
+      // injectionPoint isn't supported by getManifestSchema, but we need it.
+      const injectionPoint = config.injectionPoint || defaults.injectionPoint;
+      delete config.injectionPoint;
+
+      const options = validate(config, getManifestSchema);
+
+      // globDirectory might not be set, as developers can just provide
+      // additionalManifestEntries and forgo globbing.
+      if (options.globDirectory) {
+        const outputDir = outputOptions.dir ||
+          upath.dirname(upath.resolve(outputOptions.file));
+
+        // Make sure we leave the source service worker and any output of this
+        // specific Rollup compilation out of the precache manifest.
+        for (const chunk of Object.values(bundle)) {
+          const fileRebasedToGlobDirectory = rebasePath({
+            file: upath.resolve(outputDir, chunk.fileName),
             baseDirectory: options.globDirectory,
-          }),
-        );
+          });
+          // Sourcemaps might be disabled, but adding something extra to
+          // globIgnores doesn't hurt.
+          const mapFile = `${fileRebasedToGlobDirectory}.map`;
+
+          options.globIgnores.push(
+            fileRebasedToGlobDirectory,
+            mapFile,
+          );
+
+          // If set, this should be the path to the original source module.
+          if (chunk.facadeModuleId) {
+            const moduleRebasedToGlobDirectory = rebasePath({
+              file: chunk.facadeModuleId,
+              baseDirectory: options.globDirectory,
+            });
+            options.globIgnores.push(moduleRebasedToGlobDirectory);
+          }
+        }
       }
-      const globalRegexp = new RegExp(escapeRegexp(options.injectionPoint), 'g');
 
       const { manifestEntries, count, warnings, size } = await getFileManifestEntries(options);
 
       const manifestString = stringify(manifestEntries);
 
-      const bundles = Object.keys(bundle);
+      let noInjectionPointFound = true;
+      for (const chunk of Object.values(bundle)) {
+        // This might actually be an asset (which won't have a code property)
+        // and not a chunk. If so, continue.
+        if (!chunk.code) {
+          continue;
+        }
 
-      while (bundles.length) {
-        const bndl = bundle[bundles.pop()];
-        if (bndl.code.match(globalRegexp)) {
-          const { map, source } = await replaceAndUpdateSourceMap({
-            originalMap: bndl.map,
-            jsFilename: bndl.fileName,
-            originalSource: bndl.code,
-            replaceString: manifestString,
-            searchString: options.injectionPoint,
-          });
-          bndl.code = source;
-          bndl.map = map;
+        if (chunk.code.includes(injectionPoint)) {
+          noInjectionPointFound = false;
+          if (chunk.map) {
+            const { map, source } = await replaceAndUpdateSourceMap({
+              originalMap: chunk.map,
+              jsFilename: chunk.fileName,
+              originalSource: chunk.code,
+              replaceString: manifestString,
+              searchString: injectionPoint,
+            });
+            chunk.code = source;
+            chunk.map = map;
+          } else {
+            chunk.code = chunk.code.replace(injectionPoint, manifestString);
+          }
+
           const warn = `\nThere ${warnings.length > 1 ? 'were' : 'was'} ${chalk.red(warnings.length)} ${warnings.length > 1 ? 'warnings' : 'warning'}.`;
-          console.log(`Injected ${chalk.cyan(count + ' files')} for precaching, ${chalk.cyan(size * 0.001 + ' KB')} total, into ${chalk.cyan(bndl.fileName)}.${warnings.length ? warn : ''}`);
+          console.log(`Injected ${chalk.cyan(count + ' files')} for precaching, ${chalk.cyan(prettyBytes(size))} total, into ${chalk.cyan(chunk.fileName)}.${warnings.length ? warn : ''}`);
           if (warnings.length) {
             warnings.forEach(w => console.warn(w));
           }
         }
+      }
+
+      if (noInjectionPointFound) {
+        throw new Error(`Unable to find a place to inject the precache ` +
+          `manifest. Please ensure your service worker contains ` +
+          `"${injectionPoint}" somewhere in its code.`);
       }
     },
   };
