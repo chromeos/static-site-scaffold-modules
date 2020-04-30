@@ -1,6 +1,6 @@
 {
   "name": "rollup-plugin-workbox-inject",
-  "version": "1.0.1",
+  "version": "2.0.0",
   "description": "Injects a Workbox precache manifest into a Rollup-compiled service worker.",
   "main": "index.js",
   "scripts": {
