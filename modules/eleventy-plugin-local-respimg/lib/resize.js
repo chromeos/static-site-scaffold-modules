@@ -21,12 +21,13 @@ const pngquant = require('imagemin-pngquant');
 const gif2webp = require('imagemin-gif2webp');
 const svgo = require('imagemin-svgo');
 const gifResize = require('@gumlet/gif-resize');
-const ffmpeg = require('fluent-ffmpeg');
 
 const { ensureDirSync } = require('fs-extra');
 
 const path = require('path');
 const { writeFile } = require('fs').promises;
+const util = require('util');
+const exec = util.promisify(require('child_process').exec);
 
 const { outputURL } = require('./helpers');
 
@@ -137,21 +138,18 @@ function generateWebp(buff, config) {
  * @param {object} config
  * @return {Promise}
  */
-function generateVideo(src, config) {
-  return new Promise((resolve, reject) => {
-    const output = outputURL(src, 'xform', 'mp4', config.folders.output);
-    ffmpeg(path.join(config.folders.source, src))
-      .output(output)
-      .addOutputOption('-movflags faststart')
-      .addOutputOption('-pix_fmt yuv420p')
-      .on('error', err => {
-        reject(err);
-      })
-      .on('end', () => {
-        resolve(output);
-      })
-      .run();
-  });
+async function generateVideo(src, config) {
+  const output = outputURL(src, 'xform', 'mp4', config.folders.output);
+  const input = path.join(config.folders.source, src);
+  const command = `ffmpeg -i ${input} -movflags faststart -filter:v "scale=trunc(iw/2)*2:trunc(ih/2)*2" -pix_fmt yuv420p -y -loglevel error ${output}`;
+
+  const { stderr } = await exec(command);
+
+  if (stderr) {
+    return Promise.reject(stderr);
+  }
+
+  return output;
 }
 
 module.exports = {
