@@ -49,7 +49,7 @@
     "browser-sync": "^2.26",
     "config": "^3.2",
     "critical": "^2.0.0-23",
-    "eleventy-plugin-local-respimg": "^0.2",
+    "eleventy-plugin-local-respimg": "^0.3",
     "eleventy-plugin-safe-external-links": "^0.1",
     "gulp-cached": "^1.1",
     "gulp-eslint": "^6.0",
