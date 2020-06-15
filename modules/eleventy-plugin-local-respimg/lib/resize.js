@@ -63,9 +63,12 @@ async function resizeAndOptimize(sizes, type, src, buff, config) {
         let output = await sharp(buff)
           .resize(size)
           .toBuffer();
-        output = await imagemin.buffer(output, {
-          plugins: [mozjpeg(config.images.mozjpeg || {}), pngquant(config.images.pngquant || {})],
-        });
+        if (process.env.NODE_ENV === 'production') {
+          output = await imagemin.buffer(output, {
+            plugins: [mozjpeg(config.images.mozjpeg || {}), pngquant(config.images.pngquant || {})],
+          });
+        }
+
         const webp = await generateWebp(output, config);
 
         const outputDest = outputURL(src, size, type.ext, config.folders.output);
@@ -78,15 +81,24 @@ async function resizeAndOptimize(sizes, type, src, buff, config) {
       });
     }
     case 'image/svg': {
-      const output = await imagemin.buffer(buff, {
-        plugins: [svgo(config.images.svgo || {})],
-      });
-      return [
-        {
-          dest: path.join(config.folders.output, src),
-          buff: output,
-        },
-      ];
+      if (process.env.NODE_ENV === 'production') {
+        const output = await imagemin.buffer(buff, {
+          plugins: [svgo(config.images.svgo || {})],
+        });
+        return [
+          {
+            dest: path.join(config.folders.output, src),
+            buff: output,
+          },
+        ];
+      } else {
+        return [
+          {
+            dest: path.join(config.folders.output, src),
+            buff,
+          },
+        ];
+      }
     }
     default: {
       return [
@@ -110,13 +122,17 @@ async function resizeAndOptimize(sizes, type, src, buff, config) {
  */
 async function optimizeAdditional(f, config) {
   ensureDirSync(path.dirname(f.dest));
-  return writeFile(
-    f.dest,
-    await imagemin.buffer(f.buff, {
+
+  let output = f.buff;
+
+  if (process.env.NODE_ENV === 'production') {
+    output = await imagemin.buffer(f.buff, {
       destination: config.folders.output,
       plugins: [mozjpeg(config.images.mozjpeg || {}), pngquant(config.images.pngquant || {}), svgo(config.images.svgo || {})],
-    }),
-  );
+    });
+  }
+
+  return writeFile(f.dest, output);
 }
 
 /**
