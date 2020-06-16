@@ -46,6 +46,8 @@ function safeExternalLinksSetup(config = {}) {
    * @return {string}
    */
   return function safeExternalLinks(content, outputPath) {
+    if (!outputPath) return content;
+
     const ext = path.extname(outputPath);
 
     if (!files.includes(ext)) return content;
