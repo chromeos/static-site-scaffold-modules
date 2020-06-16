@@ -92,7 +92,7 @@ function respimgSetup(userConfig = {}) {
 
     await Promise.all(toOptimize.map(f => optimizeAdditional(f, config)));
 
-    if (outputPath.endsWith('.html')) {
+    if (outputPath && outputPath.endsWith('.html')) {
       const $ = cheerio.load(content);
 
       const images = $(':not(picture) img').get();
