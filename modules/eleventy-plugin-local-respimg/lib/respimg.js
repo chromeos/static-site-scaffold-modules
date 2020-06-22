@@ -95,7 +95,9 @@ function respimgSetup(userConfig = {}) {
     if (outputPath && outputPath.endsWith('.html')) {
       const $ = cheerio.load(content);
 
-      const images = $('img').not('picture img').get();
+      const images = $('img')
+        .not('picture img')
+        .get();
       // const pictures = $('picture img, picture source');
 
       // Optimize and make responsive images not already in an image tag
