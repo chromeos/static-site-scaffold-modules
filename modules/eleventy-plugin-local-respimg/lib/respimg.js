@@ -110,6 +110,9 @@ function respimgSetup(userConfig = {}) {
             const respSizes = $(image).attr('sizes') || config.images.sizes;
             $(image).removeAttr('sizes');
 
+            const respLoading = $(image).attr('loading') || (config.images.lazy && 'lazy');
+            $(image).removeAttr('loading');
+
             const file = readFileSync(path.join(config.folders.source, src));
             ensureDirSync(path.join(config.folders.output, path.dirname(src)));
 
@@ -146,8 +149,8 @@ function respimgSetup(userConfig = {}) {
               const width = genMax;
               $(image).attr('height', height);
               $(image).attr('width', width);
-              if (config.images.lazy) {
-                $(image).attr('loading', 'lazy');
+              if (respLoading) {
+                $(image).attr('loading', respLoading);
               }
 
               let optimize = true;
