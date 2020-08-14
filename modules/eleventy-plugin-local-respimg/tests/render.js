@@ -15,7 +15,12 @@
  */
 
 const test = require('ava');
+const path = require('path');
+
 const respimgSetup = require('../lib/respimg');
+
+const sourcePath = path.join(__dirname, 'fixtures');
+const outputBase = path.join(__dirname, 'output', 'jpg');
 
 test('Non-HTML Output Path', async t => {
   const input = '<h1>Hello World</h1>';
@@ -40,6 +45,21 @@ test('HTML Output Path, wrapped', async t => {
   const outputPath = 'file.html';
   const output = '<body><h1>Hello World</h1></body>';
   const transformer = respimgSetup();
+
+  t.is(await transformer(input, outputPath), output);
+});
+
+test('Ignore <picture> wrapped <img>', async t => {
+  const outputImages = path.join(outputBase, 'optimize');
+  const input = '<picture><img src="/images/crowne-plaza-hefei.jpg" alt="Crowne Plaza Hefei"></picture>';
+  const outputPath = 'file.html';
+  const output = '<picture><img src="/images/crowne-plaza-hefei.jpg" alt="Crowne Plaza Hefei"></picture>';
+  const transformer = respimgSetup({
+    folders: {
+      source: sourcePath,
+      output: outputImages,
+    },
+  });
 
   t.is(await transformer(input, outputPath), output);
 });
