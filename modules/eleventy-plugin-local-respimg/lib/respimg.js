@@ -95,7 +95,9 @@ function respimgSetup(userConfig = {}) {
     if (outputPath && outputPath.endsWith('.html')) {
       const $ = cheerio.load(content);
 
-      const images = $('img').not('picture img').get();
+      const images = $('img')
+        .not('picture img')
+        .get();
       // const pictures = $('picture img, picture source');
 
       // Optimize and make responsive images not already in an image tag
@@ -107,6 +109,9 @@ function respimgSetup(userConfig = {}) {
           if (local) {
             const respSizes = $(image).attr('sizes') || config.images.sizes;
             $(image).removeAttr('sizes');
+
+            const respLoading = $(image).attr('loading') || (config.images.lazy && 'lazy');
+            $(image).removeAttr('loading');
 
             const file = readFileSync(path.join(config.folders.source, src));
             ensureDirSync(path.join(config.folders.output, path.dirname(src)));
@@ -144,8 +149,8 @@ function respimgSetup(userConfig = {}) {
               const width = genMax;
               $(image).attr('height', height);
               $(image).attr('width', width);
-              if (config.images.lazy) {
-                $(image).attr('loading', 'lazy');
+              if (respLoading) {
+                $(image).attr('loading', respLoading);
               }
 
               let optimize = true;

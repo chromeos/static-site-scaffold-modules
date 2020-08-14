@@ -83,3 +83,18 @@ test('Optimizes JPEGs, puts them in <picture>, generates WebP', async t => {
     t.is(actual.type.mime, expected.type);
   }
 });
+
+test('Retain "loading" attr on <img> tags', async t => {
+  const input = '<img src="/images/crowne-plaza-hefei.jpg" alt="Crowne Plaza Hefei" loading="eager">';
+  const outputImages = path.join(outputBase, 'optimize-again');
+  const outputPath = 'file.html';
+  const output = '<picture><source srcset="/images/crowne-plaza-hefei.250.webp 250w, /images/crowne-plaza-hefei.400.webp 400w, /images/crowne-plaza-hefei.550.webp 550w, /images/crowne-plaza-hefei.700.webp 700w, /images/crowne-plaza-hefei.850.webp 850w, /images/crowne-plaza-hefei.1000.webp 1000w, /images/crowne-plaza-hefei.1150.webp 1150w, /images/crowne-plaza-hefei.1300.webp 1300w, /images/crowne-plaza-hefei.1450.webp 1450w, /images/crowne-plaza-hefei.1500.webp 1500w" sizes="100vw" type="image/webp"><source srcset="/images/crowne-plaza-hefei.250.jpg 250w, /images/crowne-plaza-hefei.400.jpg 400w, /images/crowne-plaza-hefei.550.jpg 550w, /images/crowne-plaza-hefei.700.jpg 700w, /images/crowne-plaza-hefei.850.jpg 850w, /images/crowne-plaza-hefei.1000.jpg 1000w, /images/crowne-plaza-hefei.1150.jpg 1150w, /images/crowne-plaza-hefei.1300.jpg 1300w, /images/crowne-plaza-hefei.1450.jpg 1450w, /images/crowne-plaza-hefei.1500.jpg 1500w" sizes="100vw" type="image/jpeg"><img src="/images/crowne-plaza-hefei.jpg" alt="Crowne Plaza Hefei" height="2000" width="1500" loading="eager"></picture>';
+  const transformer = respimgSetup({
+    folders: {
+      source: sourcePath,
+      output: outputImages,
+    },
+  });
+
+  t.is(await transformer(input, outputPath), output);
+});
