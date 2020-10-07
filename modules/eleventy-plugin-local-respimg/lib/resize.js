@@ -70,13 +70,15 @@ async function resizeAndOptimize(sizes, type, src, buff, config) {
         }
 
         const webp = await generateWebp(output, config);
-
+				const avif = await generateAvif(output, config);
         const outputDest = outputURL(src, size, type.ext, config.folders.output);
         const webpDest = outputURL(src, size, 'webp', config.folders.output);
+	      const avifDest = outputURL(src, size, 'avif', config.folders.output);
 
         return [
           { dest: outputDest, buff: output },
           { dest: webpDest, buff: webp },
+	        { dest: avifDest, buff: avif },
         ];
       });
     }
@@ -146,6 +148,19 @@ function generateWebp(buff, config) {
   return imagemin.buffer(buff, {
     plugins: [imageminWebP(config.images.webp || {}), gif2webp(config.images.gifwebp || {})],
   });
+}
+
+/**
+ *
+ * @param {buffer} buff - Input buffer
+ * @param {object} config - Config
+ *
+ * @return {buffer}
+ */
+function generateAvif(buff, config) {
+	return sharp(buff)
+		.heif(config.images.avif)
+		.toBuffer();
 }
 
 /**
