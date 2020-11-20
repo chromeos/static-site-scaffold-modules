@@ -47,6 +47,7 @@ const baseConfig = {
       src: 'images/**/*',
       dest: 'images/**/*',
     },
+    hoistClasses: false,
   },
 };
 
@@ -173,6 +174,12 @@ function respimgSetup(userConfig = {}) {
 
                 const imgHTML = $.html(image);
                 let img = `<picture>`;
+                if (config.images.hoistClasses) {
+                  const classes = $(image).attr('class');
+                  if (classes.length) {
+                    img = `<picture class="${classes}">`;
+                  }
+                }
                 img += `<source srcset="${webpSrcset}" sizes="${respSizes}" type="image/webp">`;
                 img += `<source srcset="${baseSrcset}" sizes="${respSizes}" type="${type.mime}">`;
                 img += `${imgHTML}</picture>`;
