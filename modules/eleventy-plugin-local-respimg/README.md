@@ -59,3 +59,9 @@ module.exports = function(eleventyConfig) {
   });
 };
 ```
+
+## Troubleshooting
+
+### SVGs
+
+SVGs are required to have `<?xml version="1.0" encoding="utf-8"?>` at the top of the file in order to have their MIME type properly read and for SVGs to work.
