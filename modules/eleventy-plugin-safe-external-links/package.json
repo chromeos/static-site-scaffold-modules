@@ -4,6 +4,7 @@
   "description": "Eleventy plugin for ensuring safe external links",
   "keywords": [
     "eleventy",
+    "eleventy-plugin",
     "security"
   ],
   "main": "index.js",
