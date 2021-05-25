@@ -1,6 +1,6 @@
 {
   "name": "vite-plugin-posthtml",
-  "version": "0.0.0",
+  "version": "0.0.2",
   "description": "A Vite plugin for PostHTML",
   "main": "index.js",
   "scripts": {
