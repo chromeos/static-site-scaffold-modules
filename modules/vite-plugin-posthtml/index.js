@@ -44,4 +44,4 @@ const posthtmlPlugin = (opts = {}) => {
   };
 };
 
-module.exports = posthtmlPlugin;
+module.exports = { posthtmlPlugin };
