@@ -137,7 +137,7 @@ function respimgSetup(userConfig = {}) {
               const genMax = max < size.width ? max : size.width;
               const sizes = [];
 
-              if (min + step <= size.width) {
+              if (min <= size.width) {
                 for (let i = min; i < genMax; i += step) {
                   sizes.push(i);
                 }
