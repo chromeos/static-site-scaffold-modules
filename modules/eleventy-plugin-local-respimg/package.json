@@ -4,6 +4,7 @@
   "description": "Eleventy plugin for optimizing and making responsive local images",
   "keywords": [
     "eleventy",
+    "eleventy-plugin",
     "respimg",
     "responsive"
   ],
