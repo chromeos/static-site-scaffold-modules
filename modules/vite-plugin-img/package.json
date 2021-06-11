@@ -1,0 +1,19 @@
+{
+  "name": "vite-plugin-img",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "vite",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "Apache-2.0",
+  "dependencies": {
+    "vite": "^2.3.4"
+  },
+  "devDependencies": {
+    "vite-plugin-eleventy": "0.0.5",
+    "vite-plugin-posthtml": "0.0.2"
+  }
+}
