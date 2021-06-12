@@ -1,7 +1,6 @@
-const sharp = require("sharp");
-const replaceExt = require("replace-ext");
-const { PerformanceObserver, performance } = require("perf_hooks");
-const path = require("path");
+const sharp = require('sharp');
+const replaceExt = require('replace-ext');
+const path = require('path');
 
 // INTERESTING THOUGHTS
 // With a Vite plugin, can this only run on the current HTML file being worked on? Would that drastically reduce the performance overhead?
@@ -34,48 +33,65 @@ const path = require("path");
 // * Need render, cache, and process methods
 //  * Cache will pull, process will change HTML, and render will render images?
 
-class PostHTMLImg {
-  constructor(opts = {}) {
-    this.options = Object.assign(
-      {
-        formats: {
-          png: ["avif", "webp", "png"],
-          jpeg: ["avif", "webp", "jpeg"],
-        },
-        resize: {
-          min: 250,
-          max: 1500,
-          step: 150,
-        },
-        wrapSVG: false, // Whether to wrap SVG in Picture element
-        attrs: ["class"], // Attributes to include on picture element from img
-        gifToVideo: true, // Still need to build this out
-        sizes: "100vw",
-        lazy: true,
-        build: true, // To pass in from Vite,
-        dirs: {
-          root: "./",
-          out: "./dist",
-          cache: "node_modules/.vite/images",
-        },
-        externalPrefix: "@fs",
-      },
-      opts
-    );
-  }
+/**
+ *
+ * @param {number[]} sizes - Array of widths in px
+ * @param {string} src - image source url
+ * @param {string} type - file extension
+ *
+ * @return {string[]}
+ */
+function generateSrcset(sizes, src, type) {
+  return sizes.map((s) => `${replaceExt(src, `.${s}.${type}`)} ${s}w`).join(', ');
+}
 
-  async process(tree) {
+/**
+ *
+ * @param {string[]} allImages - Array of all images
+ * @param {object} command - Eleventy command info
+ * @param {Object} opts - Options
+ * @return {Function}
+ */
+function postHTMLImg(allImages, command, opts = {}) {
+  const options = Object.assign(
+    {
+      formats: {
+        png: ['avif', 'webp', 'png'],
+        jpeg: ['avif', 'webp', 'jpeg'],
+      },
+      resize: {
+        min: 250,
+        max: 1500,
+        step: 150,
+      },
+      wrapSVG: false, // Whether to wrap SVG in Picture element
+      attrs: ['class'], // Attributes to include on picture element from img
+      gifToVideo: true, // Still need to build this out
+      sizes: '100vw',
+      lazy: true,
+    },
+    opts,
+  );
+
+  /**
+   *
+   * @param {PostHTMLAST} tree - PostHTML Tree
+   * @return {PostHTMLAST}
+   */
+  return async function process(tree) {
     const attrs = {};
     if (options.lazy) {
-      attrs.loading = "lazy";
+      attrs.loading = 'lazy';
     }
 
-    tree.match({ tag: "picture" }, (node) => {
+    let images = [];
+
+    tree.match({ tag: 'picture' }, (node) => {
       // Check for sources
-      const source = node.content.filter((f) => f.tag === "source");
+      const source = node.content.filter((f) => f.tag === 'source');
 
       node.content = node.content.map((n) => {
-        if (n?.tag === "img") {
+        if (n?.tag === 'img') {
           n.inPicture = true;
 
           // Image has sources already, don't override
@@ -93,7 +109,7 @@ class PostHTMLImg {
     });
 
     // Grab images without sources already
-    tree.match({ tag: "img" }, (node) => {
+    tree.match({ tag: 'img' }, (node) => {
       if (!node.hasSources && !images.includes(node.attrs.src)) {
         images.push(node.attrs.src);
       }
@@ -103,21 +119,22 @@ class PostHTMLImg {
 
     images = await Promise.all(
       images.map(async (src) => {
-        let source = path.join(this.options.dirs.root);
-        if (src.startsWith(this.options.externalPrefix)) {
-          source = src.replace(this.options.externalPrefix, "");
+        let source = src;
+        if (src.startsWith(options.externalPrefix)) {
+          source = src.replace(options.externalPrefix, '');
         }
 
-        const img = await sharp(path.join(__dirname, source), {
+        const img = await sharp(path.join(command.dirs.root, source), {
           failOnError: false,
         });
+
         const metadata = await img.metadata();
 
         const sizes = [];
         let width = metadata.width;
         let height = metadata.height;
 
-        if (metadata.format !== "svg") {
+        if (metadata.format !== 'svg') {
           // Calculate sizes
           const { step, min, max } = options.resize;
           const genMax = max < metadata.width ? max : metadata.width;
@@ -136,8 +153,10 @@ class PostHTMLImg {
 
         let formats = [];
 
-        if (metadata.format === "svg") {
-          formats.push("svg");
+        if (metadata.format === 'svg') {
+          formats.push('svg');
+        } else if (metadata.format === 'gif') {
+          formats.push('gif');
         } else {
           formats = options.formats[metadata.format];
         }
@@ -145,7 +164,7 @@ class PostHTMLImg {
         return {
           src,
           format: metadata.format,
-          // sharp: img,
+          sharp: img,
           sizes,
           attrs: {
             width,
@@ -153,11 +172,14 @@ class PostHTMLImg {
           },
           formats,
         };
-      })
+      }),
     );
 
+    allImages.push(images);
+
     // Update images
-    tree.match({ tag: "img" }, (node) => {
+    tree.match({ tag: 'img' }, (node) => {
+
       // Only operate if the image is stand-alone or doesn't have sources
       if (
         (!node.inPicture || (node.inPicture && !node.hasSources)) &&
@@ -168,44 +190,65 @@ class PostHTMLImg {
         if (!img) return node;
 
         node.attrs = Object.assign(node.attrs, img.attrs);
-        const respSizes = node.attrs.sizes || options.sizes;
 
         if (options.lazy) {
-          node.attrs.loading = "lazy";
+          node.attrs.loading = 'lazy';
         }
 
         // Mark this image as having been transformed
         node.respImgTransform = true;
 
-        if (img.format !== "svg") {
+        if (img.format === 'gif') {
+          const videoAttrs = Object.assign({}, node.attrs);
+          if (videoAttrs.loading) {
+            delete videoAttrs.loading;
+          }
+
+          const videoSrc = replaceExt(videoAttrs.src, '.mp4');
+
+          return {
+            tag: 'video',
+            content: ['\n', node, '\n'],
+            attrs: Object.assign(videoAttrs, {
+              autoplay: true,
+              loop: true,
+              muted: true,
+              playsinline: true,
+              controls: true,
+              src: videoSrc,
+            })
+          }
+        }
+
+        const respSizes = node.attrs.sizes || options.sizes;
+
+        if (img.format !== 'svg' && img.format !== 'gif' && command.build) {
           node.respImgSources = img.formats.map((f) => [
-            "\n",
+            '\n',
             {
-              tag: "source",
+              tag: 'source',
               attrs: {
                 srcset: generateSrcset(img.sizes, img.src, f),
                 sizes: respSizes,
                 type: `image/${f}`,
               },
             },
-            "\n",
+            '\n',
           ]);
         }
 
         if (
-          (!node.inPicture && img.format === "svg" && options.wrapSVG) ||
-          img.format !== "svg"
+          (!node.inPicture && img.format === 'svg' && options.wrapSVG) ||
+          (img.format !== 'svg' && img.format !== 'gif')
         ) {
           // Grab image attributes for the picture element!
           const attrs = Object.fromEntries(
-            Object.entries(node.attrs).filter(([key, val]) =>
-              options.attrs.includes(key)
-            )
+            Object.entries(node.attrs).filter(([key, val]) => options.attrs.includes(key)),
           );
           // Stick it in a picture!
           node = {
-            tag: "picture",
-            content: ["\n", node, "\n"],
+            tag: 'picture',
+            content: ['\n', node, '\n'],
             attrs,
           };
         }
@@ -215,10 +258,8 @@ class PostHTMLImg {
     });
 
     // Build the picture sources!
-    tree.match({ tag: "picture" }, (node) => {
-      const img = node.content.find((f) =>
-        Object.keys(f).includes("respImgSources")
-      );
+    tree.match({ tag: 'picture' }, (node) => {
+      const img = node.content.find((f) => Object.keys(f).includes('respImgSources'));
       if (img) {
         node.content = img.respImgSources.concat(node.content).flat();
       }
@@ -226,10 +267,8 @@ class PostHTMLImg {
       return node;
     });
 
-    performance.measure("total", "A");
-
     return tree;
-  }
+  };
 }
 
-module.exports = PostHTMLImg;
+module.exports = postHTMLImg;
