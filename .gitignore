@@ -92,3 +92,4 @@ typings/
 public
 .eyeglass_cache
 .firebase
+dist/
