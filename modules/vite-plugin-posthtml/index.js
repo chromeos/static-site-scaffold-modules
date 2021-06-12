@@ -22,9 +22,11 @@ const posthtmlPlugin = (opts = {}) => {
 
   const observer = new PerformanceObserver((items) => {
     const entries = items.getEntries();
-    const total = entries.find((i) => i.name === 'duration');
-    if (total.duration > 250) {
-      console.error(`PostHTML took ${Math.round(total.duration)}ms to run`);
+    const total = entries.find((i) => i.name.startsWith('vite-plugin-posthtml-duration'));
+    if (total?.duration > 250) {
+      console.error(
+        `PostHTML took ${Math.round(total.duration)}ms to run for path ${total.name.split(':')[1]}`,
+      );
     }
 
     performance.clearMarks();
@@ -35,10 +37,13 @@ const posthtmlPlugin = (opts = {}) => {
     name: 'posthtml',
     enforece: 'post',
 
-    async transformIndexHtml(input) {
-      performance.mark('start');
+    async transformIndexHtml(input, { path: pth }) {
+      performance.mark(`vite-plugin-posthtml-start:${pth}`);
       const { html } = await renderer(plugins || []).process(input, options || {});
-      performance.measure('duration', 'start');
+      performance.measure(
+        `vite-plugin-posthtml-duration:${pth}`,
+        `vite-plugin-posthtml-start:${pth}`,
+      );
       return html;
     },
   };
