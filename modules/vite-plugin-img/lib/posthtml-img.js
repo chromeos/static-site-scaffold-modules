@@ -66,7 +66,7 @@ function postHTMLImg(neededImages, command, opts = {}) {
       },
       wrapSVG: false, // Whether to wrap SVG in Picture element
       attrs: ['class'], // Attributes to include on picture element from img
-      gifToVideo: true, // Still need to build this out
+      gifToVideo: false, // Still need to build this out
       sizes: '100vw',
       lazy: true,
     },
