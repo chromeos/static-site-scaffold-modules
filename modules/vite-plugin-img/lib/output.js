@@ -12,8 +12,11 @@ module.exports = async function output(images, config, command) {
   let total = 0;
 
   await Promise.all(
-    images.map(async img =>
-      Promise.all(
+    images.map(async img => {
+      const f = replaceExt(img.src, `.[${img.sizes.join(',')}].[${img.formats.join(',')}]`);
+      config.logger.info(chalk.grey(`rendering ${f}`));
+
+      return await Promise.all(
         img.sizes.reverse().map(async s => {
           const stream = img.sharp.clone().resize(s);
           await Promise.all(
@@ -37,12 +40,11 @@ module.exports = async function output(images, config, command) {
               }
 
               await copy.toFile(file);
-              config.logger.info(chalk.grey(`rendering ${file.replace(command.dirs.out, '').substring(1)}`));
             }),
           );
         }),
-      ),
-    ),
+      );
+    }),
   );
 
   return total;
