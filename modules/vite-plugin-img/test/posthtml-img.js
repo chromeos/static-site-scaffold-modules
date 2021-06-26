@@ -12,9 +12,19 @@ const command = {
   }
 }
 
-test.skip('Ignore images already in pictures', async t => {
+test('Add sources to images in pictures', async t => {
   const input = '<picture><img src="/lobster-mac-n-cheese.jpg" /></picture>';
-  const expected = '<picture><img src="/lobster-mac-n-cheese.jpg" loading="lazy"></picture>';
+  const expected = '<picture>\n<source srcset="/lobster-mac-n-cheese.250.avif 250w, /lobster-mac-n-cheese.400.avif 400w, /lobster-mac-n-cheese.550.avif 550w, /lobster-mac-n-cheese.700.avif 700w, /lobster-mac-n-cheese.850.avif 850w, /lobster-mac-n-cheese.1000.avif 1000w, /lobster-mac-n-cheese.1150.avif 1150w, /lobster-mac-n-cheese.1300.avif 1300w, /lobster-mac-n-cheese.1450.avif 1450w, /lobster-mac-n-cheese.1500.avif 1500w" sizes="100vw" type="image/avif">\n\n<source srcset="/lobster-mac-n-cheese.250.webp 250w, /lobster-mac-n-cheese.400.webp 400w, /lobster-mac-n-cheese.550.webp 550w, /lobster-mac-n-cheese.700.webp 700w, /lobster-mac-n-cheese.850.webp 850w, /lobster-mac-n-cheese.1000.webp 1000w, /lobster-mac-n-cheese.1150.webp 1150w, /lobster-mac-n-cheese.1300.webp 1300w, /lobster-mac-n-cheese.1450.webp 1450w, /lobster-mac-n-cheese.1500.webp 1500w" sizes="100vw" type="image/webp">\n\n<source srcset="/lobster-mac-n-cheese.250.jpeg 250w, /lobster-mac-n-cheese.400.jpeg 400w, /lobster-mac-n-cheese.550.jpeg 550w, /lobster-mac-n-cheese.700.jpeg 700w, /lobster-mac-n-cheese.850.jpeg 850w, /lobster-mac-n-cheese.1000.jpeg 1000w, /lobster-mac-n-cheese.1150.jpeg 1150w, /lobster-mac-n-cheese.1300.jpeg 1300w, /lobster-mac-n-cheese.1450.jpeg 1450w, /lobster-mac-n-cheese.1500.jpeg 1500w" sizes="100vw" type="image/jpeg">\n<img src="/lobster-mac-n-cheese.jpg" width="1500" height="1500" loading="lazy"></picture>';
+  const images = [];
+  const {html: output} = await posthtml([plugin(images, command, {})]).process(input, {
+    sync: false
+  });
+  t.is(output, expected);
+});
+
+test('Ignore pictures with source sets', async t => {
+  const input = '<picture><source srcset="/lobster-mac-n-cheese.1500.avif 1500w" sizes="100vw" type="image/avif"><img src="/lobster-mac-n-cheese.jpg"></picture>';
+  const expected = '<picture><source srcset="/lobster-mac-n-cheese.1500.avif 1500w" sizes="100vw" type="image/avif"><img src="/lobster-mac-n-cheese.jpg"></picture>';
   const images = [];
   const {html: output} = await posthtml([plugin(images, command, {})]).process(input, {
     sync: false
