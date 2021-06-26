@@ -42,17 +42,17 @@ const path = require('path');
  * @return {string[]}
  */
 function generateSrcset(sizes, src, type) {
-  return sizes.map((s) => `${replaceExt(src, `.${s}.${type}`)} ${s}w`).join(', ');
+  return sizes.map(s => `${replaceExt(src, `.${s}.${type}`)} ${s}w`).join(', ');
 }
 
 /**
  *
- * @param {string[]} allImages - Array of all images
+ * @param {string[]} neededImages - Array of all images
  * @param {object} command - Eleventy command info
  * @param {Object} opts - Options
  * @return {Function}
  */
-function postHTMLImg(allImages, command, opts = {}) {
+function postHTMLImg(neededImages, command, opts = {}) {
   const options = Object.assign(
     {
       formats: {
@@ -86,11 +86,11 @@ function postHTMLImg(allImages, command, opts = {}) {
 
     let images = [];
 
-    tree.match({ tag: 'picture' }, (node) => {
+    tree.match({ tag: 'picture' }, node => {
       // Check for sources
-      const source = node.content.filter((f) => f.tag === 'source');
+      const source = node.content.filter(f => f.tag === 'source');
 
-      node.content = node.content.map((n) => {
+      node.content = node.content.map(n => {
         if (n?.tag === 'img') {
           n.inPicture = true;
 
@@ -109,7 +109,7 @@ function postHTMLImg(allImages, command, opts = {}) {
     });
 
     // Grab images without sources already
-    tree.match({ tag: 'img' }, (node) => {
+    tree.match({ tag: 'img' }, node => {
       if (!node.hasSources && !images.includes(node.attrs.src)) {
         images.push(node.attrs.src);
       }
@@ -118,11 +118,11 @@ function postHTMLImg(allImages, command, opts = {}) {
     });
 
     images = await Promise.all(
-      images.map(async (src) => {
+      images.map(async src => {
         let source = src;
-        if (src.startsWith(options.externalPrefix)) {
-          source = src.replace(options.externalPrefix, '');
-        }
+        // if (src.startsWith(options.externalPrefix)) {
+        //   source = src.replace(options.externalPrefix, '');
+        // }
 
         const img = await sharp(path.join(command.dirs.root, source), {
           failOnError: false,
@@ -175,17 +175,15 @@ function postHTMLImg(allImages, command, opts = {}) {
       }),
     );
 
-    allImages.push(images);
+    neededImages.push(images);
+    // imageOutput.push(images);
 
     // Update images
-    tree.match({ tag: 'img' }, (node) => {
-
+    tree.match({ tag: 'img' }, node => {
       // Only operate if the image is stand-alone or doesn't have sources
-      if (
-        (!node.inPicture || (node.inPicture && !node.hasSources)) &&
-        node.respImgTransform !== true
-      ) {
-        const img = images.find((i) => i.src === node.attrs.src);
+
+      if ((!node.inPicture || (node.inPicture && !node.hasSources)) && node.respImgTransform !== true) {
+        const img = images.find(i => i.src === node.attrs.src);
 
         if (!img) return node;
 
@@ -216,14 +214,14 @@ function postHTMLImg(allImages, command, opts = {}) {
               playsinline: true,
               controls: true,
               src: videoSrc,
-            })
-          }
+            }),
+          };
         }
 
         const respSizes = node.attrs.sizes || options.sizes;
 
         if (img.format !== 'svg' && img.format !== 'gif' && command.build) {
-          node.respImgSources = img.formats.map((f) => [
+          node.respImgSources = img.formats.map(f => [
             '\n',
             {
               tag: 'source',
@@ -237,20 +235,17 @@ function postHTMLImg(allImages, command, opts = {}) {
           ]);
         }
 
-        if (
-          (!node.inPicture && img.format === 'svg' && options.wrapSVG) ||
-          (img.format !== 'svg' && img.format !== 'gif')
-        ) {
-          // Grab image attributes for the picture element!
-          const attrs = Object.fromEntries(
-            Object.entries(node.attrs).filter(([key, val]) => options.attrs.includes(key)),
-          );
-          // Stick it in a picture!
-          node = {
-            tag: 'picture',
-            content: ['\n', node, '\n'],
-            attrs,
-          };
+        if (!node.inPicture) {
+          if ((img.format === 'svg' && options.wrapSVG) || (img.format !== 'svg' && img.format !== 'gif')) {
+            // Grab image attributes for the picture element!
+            const attrs = Object.fromEntries(Object.entries(node.attrs).filter(([key, val]) => options.attrs.includes(key)));
+            // Stick it in a picture!
+            node = {
+              tag: 'picture',
+              content: ['\n', node, '\n'],
+              attrs,
+            };
+          }
         }
       }
 
@@ -258,8 +253,8 @@ function postHTMLImg(allImages, command, opts = {}) {
     });
 
     // Build the picture sources!
-    tree.match({ tag: 'picture' }, (node) => {
-      const img = node.content.find((f) => Object.keys(f).includes('respImgSources'));
+    tree.match({ tag: 'picture' }, node => {
+      const img = node.content.find(f => Object.keys(f).includes('respImgSources'));
       if (img) {
         node.content = img.respImgSources.concat(node.content).flat();
       }
