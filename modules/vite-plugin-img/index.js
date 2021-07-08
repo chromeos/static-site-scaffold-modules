@@ -55,7 +55,7 @@ const imgPlugin = (opts = {}) => {
 
       if (neededImages.length && command.build) {
         const unique = neededImages.flat().filter(img => {
-          const f = img.format !== 'gif' && img.format !== 'svg';
+          const f = img.format !== 'svg';
           const compiled = images.findIndex(i => i?.src === img.src) >= 0;
           return !compiled && f;
         });

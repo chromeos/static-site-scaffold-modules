@@ -11,6 +11,7 @@
   "license": "Apache-2.0",
   "dependencies": {
     "chalk": "^4.1.1",
+    "fluent-ffmpeg": "^2.1.2",
     "posthtml": "^0.16.4",
     "replace-ext": "^2.0.0",
     "sharp": "^0.28.3"
