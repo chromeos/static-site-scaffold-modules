@@ -183,18 +183,31 @@ function postHTMLImg(allImages, options) {
 
           const videoSrc = replaceExt(videoAttrs.src, '.mp4');
 
-          return {
-            tag: 'video',
-            content: ['\n', node, '\n'],
-            attrs: Object.assign(videoAttrs, {
-              autoplay: true,
-              loop: true,
-              muted: true,
-              playsinline: true,
-              controls: true,
-              src: videoSrc,
-            }),
-          };
+          // If we're building the final output, we need to generate the video
+          if (options.build) {
+            return {
+              tag: 'video',
+              // Only include the image as content for production fallback
+              content: ['\n', node, '\n'],
+              attrs: Object.assign(videoAttrs, {
+                autoplay: true,
+                loop: true,
+                muted: true,
+                playsinline: true,
+                controls: true,
+                src: videoSrc,
+              }),
+            };
+            // Otherwise, use a Video tag with the right source, but include a poster for the GIF
+          } else {
+            return {
+              tag: 'video',
+              attrs: Object.assign(videoAttrs, {
+                src: videoSrc,
+                poster: replaceExt(videoAttrs.src, '.gif'),
+              }),
+            };
+          }
         }
 
         const respSizes = node.attrs.sizes || options.sizes;
