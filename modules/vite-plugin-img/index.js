@@ -12,10 +12,26 @@ const path = require('path');
  */
 const imgPlugin = (opts = {}) => {
   let images = [];
-  let config = {};
-  const options = opts;
-  let command = {};
-  let total = 0;
+  const options = Object.assign(
+    {
+      formats: {
+        avif: true,
+        webp: true,
+      },
+      resize: {
+        min: 250,
+        max: 1500,
+        step: 150,
+      },
+      wrapSVG: false, // Whether to wrap SVG in Picture element
+      attrs: ['class'], // Attributes to include on picture element from img
+      gifToVideo: true, // Still need to build this out
+      sizes: '100vw',
+      lazy: true,
+      optimizer: 'squoosh', // squoosh or sharp
+    },
+    opts,
+  );
 
   const observer = new PerformanceObserver(items => {
     const entries = items.getEntries();

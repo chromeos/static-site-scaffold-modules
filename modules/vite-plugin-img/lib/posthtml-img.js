@@ -47,32 +47,11 @@ function generateSrcset(sizes, src, type) {
 
 /**
  *
- * @param {string[]} neededImages - Array of all images
- * @param {object} command - Eleventy command info
- * @param {Object} opts - Options
+ * @param {string[]} allImages - Array of all images
+ * @param {object} options - Options to process with
  * @return {Function}
  */
-function postHTMLImg(neededImages, command, opts = {}) {
-  const options = Object.assign(
-    {
-      formats: {
-        png: ['avif', 'webp', 'png'],
-        jpeg: ['avif', 'webp', 'jpeg'],
-      },
-      resize: {
-        min: 250,
-        max: 1500,
-        step: 150,
-      },
-      wrapSVG: false, // Whether to wrap SVG in Picture element
-      attrs: ['class'], // Attributes to include on picture element from img
-      gifToVideo: false, // Still need to build this out
-      sizes: '100vw',
-      lazy: true,
-    },
-    opts,
-  );
-
+function postHTMLImg(allImages, options) {
   /**
    *
    * @param {PostHTMLAST} tree - PostHTML Tree
@@ -124,7 +103,7 @@ function postHTMLImg(neededImages, command, opts = {}) {
         //   source = src.replace(options.externalPrefix, '');
         // }
 
-        const img = await sharp(path.join(command.dirs.root, source), {
+        const img = await sharp(path.join(options.dirs.root, source), {
           failOnError: false,
         });
 
@@ -220,7 +199,7 @@ function postHTMLImg(neededImages, command, opts = {}) {
 
         const respSizes = node.attrs.sizes || options.sizes;
 
-        if (img.format !== 'svg' && img.format !== 'gif' && command.build) {
+        if (img.format !== 'svg' && img.format !== 'gif' && options.build) {
           node.respImgSources = img.formats.map(f => [
             '\n',
             {
