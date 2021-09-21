@@ -130,14 +130,15 @@ function postHTMLImg(allImages, options) {
           sizes.push(metadata.width);
         }
 
-        let formats = [];
+        let formats = [metadata.format];
 
-        if (metadata.format === 'svg') {
-          formats.push('svg');
-        } else if (metadata.format === 'gif') {
-          formats.push('gif');
-        } else {
-          formats = options.formats[metadata.format];
+        if (metadata.format !== 'svg' && metadata.format !== 'gif') {
+          if (options.formats.webp) {
+            formats.unshift('webp');
+          }
+          if (options.formats.avif) {
+            formats.unshift('avif');
+          }
         }
 
         return {
