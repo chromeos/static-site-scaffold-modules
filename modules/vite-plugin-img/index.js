@@ -66,6 +66,7 @@ const imgPlugin = (opts = {}) => {
 
   return {
     name: 'image',
+    enforce: 'post',
 
     configResolved(resolvedConfig) {
       options.build = resolvedConfig.command === 'build';
