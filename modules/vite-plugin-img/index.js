@@ -37,8 +37,26 @@ const imgPlugin = (opts = {}) => {
     const entries = items.getEntries();
     const total = entries.find(i => i.name.startsWith('vite-plugin-img-duration'));
     if (total?.duration > 250) {
-      const items = total.name.split(':')[1];
-      config.logger.info(chalk.green(`Wrote ${items} images in ${(total.duration * 0.001).toFixed(2)}s (${Math.round(total.duration / items)}ms each)`));
+      const items = JSON.parse(total.name.replace('vite-plugin-img-duration:', ''));
+      let desc = 'image';
+      if (items.total === items.mp4) {
+        desc = 'video';
+      }
+
+      if (items.total > 1) {
+        desc += 's';
+      }
+
+      if (items.mp4 > 0 && items.total > items.mp4) {
+        desc = 'images and videos';
+      }
+
+      const images = Object.entries(items)
+        .filter(([key, value]) => value > 0 && key !== 'total')
+        .map(([key, value]) => `${value} ${key}`)
+        .join(', ');
+
+      options.logger?.info(chalk.green(`Wrote ${items.total} ${desc} (${images}) in ${(total.duration * 0.001).toFixed(2)}s (${Math.round(total.duration / items.total)}ms each)`));
     }
 
     performance.clearMarks();
@@ -73,7 +91,31 @@ const imgPlugin = (opts = {}) => {
     },
 
     async writeBundle() {
-      performance.measure(`vite-plugin-img-duration:${total}`, 'vite-plugin-img-start');
+      const counter = {
+        total: 0,
+        avif: 0,
+        webp: 0,
+        jpeg: 0,
+        png: 0,
+        mp4: 0,
+      };
+
+      if (images.length && options.build) {
+        const unique = images
+          .flat()
+          .filter(img => img.format !== 'svg')
+          .reduce((u, i) => {
+            const exists = u.find(u => u.src === i.src);
+            if (!exists) {
+              u.push(i);
+            }
+            return u;
+          }, []);
+
+        await output(unique, options, counter);
+      }
+
+      performance.measure(`vite-plugin-img-duration:${JSON.stringify(counter)}`, 'vite-plugin-img-start');
     },
   };
 };
