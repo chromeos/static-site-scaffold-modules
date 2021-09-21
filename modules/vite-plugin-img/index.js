@@ -50,16 +50,14 @@ const imgPlugin = (opts = {}) => {
     name: 'image',
 
     configResolved(resolvedConfig) {
-      config = resolvedConfig;
-      command = {
-        build: config.command === 'build',
-        dirs: {
-          root: config.publicDir,
-          out: path.join(config.root, config.build.outDir),
-          cache: path.join(config.cacheDir, 'images'),
-        },
-        externalPrefix: '@fs',
+      options.build = resolvedConfig.command === 'build';
+      options.dirs = {
+        root: resolvedConfig.publicDir,
+        out: path.join(resolvedConfig.root, resolvedConfig.build.outDir),
+        cache: path.join(resolvedConfig.cacheDir, 'images'),
+        external: '@fs',
       };
+      options.logger = resolvedConfig.logger;
     },
 
     async transformIndexHtml(input) {
