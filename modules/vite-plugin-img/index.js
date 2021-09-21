@@ -64,24 +64,12 @@ const imgPlugin = (opts = {}) => {
 
     async transformIndexHtml(input) {
       performance.mark('vite-plugin-img-start');
-      const neededImages = [];
-      const { html } = await posthtml([postHTMLImg(neededImages, command, options)]).process(input, {
+      const { html } = await posthtml([postHTMLImg(images, options)]).process(input, {
         sync: false,
       });
 
-      if (neededImages.length && command.build) {
-        const unique = neededImages.flat().filter(img => {
-          const f = img.format !== 'svg';
-          const compiled = images.findIndex(i => i?.src === img.src) >= 0;
-          return !compiled && f;
-        });
-
-        images.push(unique);
-
-        images = images.flat();
-
-        total += await output(unique, config, command);
-      }
+      // Need to flatten the array after ach run so the memoization works in the plugin
+      images = images.flat();
 
       return html;
     },

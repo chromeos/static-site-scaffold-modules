@@ -99,6 +99,14 @@ function postHTMLImg(allImages, options) {
     images = await Promise.all(
       images.map(async src => {
         let source = src;
+
+        const exists = allImages.find(i => i.src === src);
+
+        // Use allImages as a memoization cache.
+        if (exists) {
+          return exists;
+        }
+
         // if (src.startsWith(options.externalPrefix)) {
         //   source = src.replace(options.externalPrefix, '');
         // }
@@ -155,8 +163,8 @@ function postHTMLImg(allImages, options) {
       }),
     );
 
-    neededImages.push(images);
-    // imageOutput.push(images);
+    // It's OK if duplicates wind up here, we'll dedupe before output
+    allImages.push(images);
 
     // Update images
     tree.match({ tag: 'img' }, node => {
