@@ -14,22 +14,23 @@
  * limitations under the License.
  */
 const yaml = require('js-yaml');
+const caller = require('caller');
 const { readdirSync, readFileSync } = require('fs');
-const { basename, extname, join } = require('path');
+const { basename, extname, join, dirname } = require('path');
 
 /**
  * Builds locale data files from JSON files in the language's `_data` directory
  *
- * @param {string} dirname - Path to start search from
  * @param {string} fallback - Locale code to fall back to. Defaults to 'en'
  * @return {object}
  */
-function localeDataCascade(dirname, fallback = 'en') {
+function dataFallback(fallback = 'en') {
   const config = {};
+  const dir = dirname(caller());
 
   // Get data directory from passed-in directory
-  const dataPath = join(dirname, '_data');
-  const fallbackPath = join(dirname, '..', fallback, '_data');
+  const dataPath = join(dir, '_data');
+  const fallbackPath = join(dir, '..', fallback, '_data');
 
   // Find all files in directory
   const files = readdirSync(dataPath);
@@ -56,4 +57,4 @@ function localeDataCascade(dirname, fallback = 'en') {
   return config;
 }
 
-module.exports = localeDataCascade;
+module.exports = dataFallback;

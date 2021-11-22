@@ -14,6 +14,7 @@
   "author": "Sam Richard <samrichard@google.com>",
   "license": "Apache-2.0",
   "dependencies": {
+    "caller": "^1.0.1",
     "full-icu": "^1.4.0",
     "iso-639-1": "^2.1.10",
     "js-yaml": "^4.1.0"
