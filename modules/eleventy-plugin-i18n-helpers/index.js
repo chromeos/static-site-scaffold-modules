@@ -10,7 +10,7 @@ const filters = require('./lib/filters');
 function configFunction(eleventy, config = {}) {
   eleventy.addFilter('date', filters.createDateFilter(config));
   eleventy.addFilter('localeURL', filters.createLocaleURLFilter(config));
-  eleventy.addFilter('langName', filters.iso);
+  eleventy.addFilter('iso', filters.iso);
 
   // Allows for .json, .js, .yaml, and .yml files to be included in Eleventy watch for i18n data.
   if (config.contentRoot) {

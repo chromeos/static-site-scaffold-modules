@@ -48,7 +48,7 @@ function dataFallback(fallback = 'en') {
     const name = basename(file, ext);
 
     if (ext === '.yaml' || ext === '.yml') {
-      config[name] = yaml.safeLoad(readFileSync(file, 'utf-8'));
+      config[name] = yaml.load(readFileSync(file, 'utf-8'));
     } else if (ext === '.json') {
       config[name] = require(file);
     }
