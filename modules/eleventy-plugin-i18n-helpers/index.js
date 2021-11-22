@@ -13,8 +13,9 @@ function configFunction(eleventy, config = {}) {
   eleventy.addFilter('langName', filters.iso);
 
   // Allows for .json, .js, .yaml, and .yml files to be included in Eleventy watch for i18n data.
-  if (config.pagesFolder) {
-    eleventy.addWatchTarget(path.join(config.pagesFolder, `{${ISO6391.getAllCodes().join(',')}}`, '_data', '*.{json,js,yaml,yml}'));
+  if (config.contentRoot) {
+    const folders = config.fallbackFolders || ISO6391.getAllCodes();
+    eleventy.addWatchTarget(path.join(path.relative(process.cwd(), config.contentRoot), `{${folders.join(',')}}`, '_data', '*.{json,js,yaml,yml}'));
   }
 }
 
