@@ -1,6 +1,6 @@
 {
   "name": "chromeos-dev-markdown",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "Markdown rendering configuration for ChromeOS.dev",
   "main": "index.js",
   "scripts": {
