@@ -41,6 +41,22 @@ test('Renders blockquotes with citations without carrying over to next blockquot
   t.is(output, expected);
 });
 
+test('Rendered quotes after each other', t => {
+  const content = `> This is a nice quote. Eiusmod incididunt excepteur velit qui amet id voluptate cupidatat. Voluptate exercitation incididunt aute pariatur pariatur deserunt minim proident consequat.
+  > {cite="Here is the quote attribution"}
+  
+  > This is a nice quote without attribution. Eiusmod incididunt excepteur velit qui amet id voluptate cupidatat. Voluptate exercitation incididunt aute pariatur pariatur deserunt minim proident consequat.
+  >
+  > This is the second paragraph.
+  > {cite="Here is another quote attribution"}`;
+  const output = md.render(content);
+  const expected = `<blockquote><p>This is a nice quote. Eiusmod incididunt excepteur velit qui amet id voluptate cupidatat. Voluptate exercitation incididunt aute pariatur pariatur deserunt minim proident consequat.</p>
+<footer>Here is the quote attribution</footer></blockquote><blockquote><p>This is a nice quote without attribution. Eiusmod incididunt excepteur velit qui amet id voluptate cupidatat. Voluptate exercitation incididunt aute pariatur pariatur deserunt minim proident consequat.</p>
+<p>This is the second paragraph.</p>
+<footer>Here is another quote attribution</footer></blockquote>`;
+  t.is(output, expected);
+});
+
 test('Renders headers with unicode, ids, and sections', t => {
   const content = `# Hélløoö 🌎 Test
 This is some content`;

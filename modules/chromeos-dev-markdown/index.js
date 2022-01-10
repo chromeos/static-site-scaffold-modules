@@ -88,9 +88,18 @@ md.renderer.rules.blockquote_open = function(tokens, idx, options, env, slf) {
   const citeIndex = Array.isArray(token.attrs) ? token.attrs.findIndex(attr => attr[0] === 'cite') : null;
 
   if (citeIndex !== null) {
-    const nextClose = tokens.find(t => t.type === 'blockquote_close');
-    nextClose.cite = token.attrs[citeIndex][1];
-    token.attrs.splice(citeIndex, 1);
+    let nextClose = null;
+    for (let i = idx + 1; i < tokens.length; i++) {
+      const t = tokens[i];
+      if (t.type === 'blockquote_close') {
+        nextClose = t;
+        break;
+      }
+    }
+    if (nextClose) {
+      nextClose.cite = token.attrs[citeIndex][1];
+      token.attrs.splice(citeIndex, 1);
+    }
   }
 
   const blockquoteTokenHTML = `<blockquote${slf.renderAttrs(token)}>`;
