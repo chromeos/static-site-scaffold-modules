@@ -25,6 +25,6 @@
   "homepage": "https://github.com/chromeos/static-site-scaffold-modules#readme",
   "license": "Apache-2.0",
   "devDependencies": {
-    "markdown-it": "^10.0.0"
+    "markdown-it": "^12.3.2"
   }
 }
