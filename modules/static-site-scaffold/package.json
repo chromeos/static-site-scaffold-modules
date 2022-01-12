@@ -62,7 +62,7 @@
     "js-yaml": "^3.13",
     "lazypipe": "^1.0",
     "lodash.clonedeep": "^4.5",
-    "markdown-it": "^9.1",
+    "markdown-it": "^12.3",
     "markdown-it-abbr": "^1.0",
     "markdown-it-anchor": "^5.2",
     "markdown-it-attrs": "^3.0",
