@@ -76,7 +76,7 @@
     "markdown-it-sub": "^1.0",
     "markdown-it-sup": "^1.0",
     "markdown-it-video": "^0.6.3",
-    "node-sass": "^4.13",
+    "node-sass": "^7.0",
     "npm-run": "^5.0",
     "prismjs": "^1.17",
     "rollup-plugin-babel": "^4.3",
