@@ -1,5 +1,5 @@
-const posthtml = require('posthtml');
-const { PerformanceObserver, performance } = require('perf_hooks');
+import posthtml from 'posthtml';
+import { PerformanceObserver, performance } from 'perf_hooks';
 
 /**
  *
@@ -9,15 +9,13 @@ const { PerformanceObserver, performance } = require('perf_hooks');
  * @param {Object} [opts.options] PostHTML options. Will always run in asynchronous mode
  * @return {Object} Vite plugin
  */
-const posthtmlPlugin = (opts = {}) => {
-  const { options, plugins, renderer } = Object.assign(
-    {
+export function posthtmlPlugin(opts = {}) {
+  const { options, plugins, renderer } = {
       renderer: posthtml,
       options: {},
       plugins: [],
-    },
-    opts,
-  );
+      ...opts
+  }
   options.sync = false;
 
   const observer = new PerformanceObserver((items) => {
@@ -29,11 +27,11 @@ const posthtmlPlugin = (opts = {}) => {
 
     performance.clearMarks();
   });
-  observer.observe({ entryTypes: ['measure'], type: 'measure' });
+  observer.observe({ entryTypes: ['measure'] });
 
   return {
     name: 'posthtml',
-    enforece: 'post',
+    enforce: 'post',
 
     async transformIndexHtml(input) {
       performance.mark('start');
@@ -43,5 +41,3 @@ const posthtmlPlugin = (opts = {}) => {
     },
   };
 };
-
-module.exports = { posthtmlPlugin };
