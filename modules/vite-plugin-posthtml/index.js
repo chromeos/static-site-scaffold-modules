@@ -33,7 +33,7 @@ const posthtmlPlugin = (opts = {}) => {
 
   return {
     name: 'posthtml',
-    enforece: 'post',
+    enforce: 'post',
 
     async transformIndexHtml(input) {
       performance.mark('start');
