@@ -29,7 +29,7 @@ const posthtmlPlugin = (opts = {}) => {
 
     performance.clearMarks();
   });
-  observer.observe({ entryTypes: ['measure'], type: 'measure' });
+  observer.observe({ entryTypes: ['measure'] });
 
   return {
     name: 'posthtml',
